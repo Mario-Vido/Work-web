@@ -7,6 +7,6 @@
 <body>
 <h1><%= "Tabulka" %></h1>
 <br/>
-<a href="hello-servlet">Klikni pre zobrazenie tabulky</a>
+<a href="cypher">Klikni pre zobrazenie tabulky</a>
 </body>
 </html>
