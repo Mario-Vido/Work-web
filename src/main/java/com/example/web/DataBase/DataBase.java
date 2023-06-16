@@ -7,9 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DataBase {
-    public DataBase(){
-
-    }
     public void insertMassage(String textFromUser, String textAfterEncryption, String selectedItem){
         String jdbcURL = "jdbc:postgresql://localhost:5432/Skuska";
         String username = "postgres";
