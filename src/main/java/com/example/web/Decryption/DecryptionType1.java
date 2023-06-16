@@ -8,7 +8,8 @@ public class DecryptionType1 implements Decryption{
         HashMap<Character, Character> letterMap = new HashMap<>();
         for (char c = 'z'; c >= 'a'; c--) {
             char replacement = (char) ('a' + ('z' - c));
-            letterMap.put(c, replacement);
+            letterMap.put(Character.toLowerCase(c), Character.toLowerCase(replacement));
+            letterMap.put(Character.toUpperCase(c), Character.toUpperCase(replacement));
         }
 
         StringBuilder replacedString = new StringBuilder();

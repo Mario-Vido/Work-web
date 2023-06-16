@@ -3,17 +3,22 @@ package com.example.web.Encryption;
 public class EncryptionType2 implements Encryption {
     @Override
     public String performEncryption(String text) {
-        StringBuilder ciphertext = new StringBuilder();
+        StringBuilder plaintext = new StringBuilder();
+        int shift = 3;
         for (int i = 0; i < text.length(); i++) {
             char currentChar = text.charAt(i);
             if (Character.isLetter(currentChar)) {
-                int shift = 3;
-                char encryptedChar = (char) ((currentChar - 'a' + shift) % 26 + 'a');
-                ciphertext.append(encryptedChar);
+                char decryptedChar;
+                if (Character.isUpperCase(currentChar)) {
+                    decryptedChar = (char) (((currentChar - 'A' + shift) % 26) + 'A');
+                } else {
+                    decryptedChar = (char) (((currentChar - 'a' + shift) % 26) + 'a');
+                }
+                plaintext.append(decryptedChar);
             } else {
-                ciphertext.append(currentChar);
+                plaintext.append(currentChar);
             }
         }
-        return ciphertext.toString();
+        return plaintext.toString();
     }
 }
