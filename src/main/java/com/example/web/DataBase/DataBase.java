@@ -21,8 +21,6 @@ public class DataBase {
             statement.setString(2,textAfterEncryption);
             statement.setString(3,selectedItem);
             statement.executeUpdate();
-
-
             connection.close();
         } catch (SQLException e) {
             System.out.println("Error in connecting to PostgradeSQL()");

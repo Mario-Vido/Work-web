@@ -2,11 +2,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>JSP - Hello World</title>
+  <title>Cypher</title>
 </head>
 <body>
-<h1><%= "Tabulka" %></h1>
 <br/>
-<a href="cypher">Klikni pre zobrazenie tabulky</a>
+
+<h1>Server is running</h1>
 </body>
 </html>
