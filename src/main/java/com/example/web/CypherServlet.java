@@ -28,7 +28,6 @@ public class CypherServlet extends HttpServlet {
         String helper = request.getParameter("param3");
         int convertedHelper=Integer.parseInt(helper);
         response.setContentType("text/plain");
-
         if (convertedHelper==0) {
             if (typeOfCypher.equals("Encryption type 1")) {
                 responseFromCypher = encryptionType1.performEncryption(inputFromUser);
