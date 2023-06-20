@@ -1,6 +1,7 @@
 package com.example.web;
 
 import java.io.*;
+import java.sql.Connection;
 
 import com.example.web.DataBase.DataBase;
 import com.example.web.Decryption.Decryption;
@@ -9,6 +10,7 @@ import com.example.web.Decryption.DecryptionType2;
 import com.example.web.Encryption.Encryption;
 import com.example.web.Encryption.EncryptionType1;
 import com.example.web.Encryption.EncryptionType2;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -23,6 +25,8 @@ public class CypherServlet extends HttpServlet {
     String responseFromCypher = null;
 
     protected void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException{
+        ServletContext context = getServletContext();
+        Connection conn = (Connection) context.getAttribute("databaseConnection");
         String inputFromUser = request.getParameter("param1");
         String typeOfCypher = request.getParameter("param2");
         String helper = request.getParameter("param3");
@@ -34,7 +38,7 @@ public class CypherServlet extends HttpServlet {
             } else if (typeOfCypher.equals("Encryption type 2")) {
                 responseFromCypher = encryptionType2.performEncryption(inputFromUser);
             }
-            dataBase.insertMassage(inputFromUser, responseFromCypher, typeOfCypher);
+            dataBase.insertMassage(inputFromUser, responseFromCypher, typeOfCypher,conn);
         } else if (convertedHelper==1 && responseFromCypher != null && !responseFromCypher.equals(inputFromUser)) {
             if (typeOfCypher.equals("Encryption type 1")) {
                 responseFromCypher = decryptionType1.performDecryption(responseFromCypher);
