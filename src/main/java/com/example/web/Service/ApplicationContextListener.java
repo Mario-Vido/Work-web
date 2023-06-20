@@ -31,6 +31,13 @@ public class ApplicationContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        ServletContextListener.super.contextDestroyed(sce);
+        ServletContext servletContext = sce.getServletContext();
+        Connection connection = (Connection) servletContext.getAttribute("databaseConnection");
+        try {
+            connection.close();
+            System.out.println("Disconnected from PostgreSQL server");
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }
