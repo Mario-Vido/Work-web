@@ -21,7 +21,7 @@ public class TableServlet extends HttpServlet {
         out.println("<html><body>");
         out.println("<table style=\"border-collapse: collapse;\">");
         out.println("<tr style=\"border: 1px solid black;\"><th style=\"border: 1px solid black; padding: 5px;\">ID</th><th style=\"border: 1px solid black; padding: 5px;\">Input</th>" +
-                "<th style=\"border: 1px solid black; padding: 5px;\">Output</th><th style=\"border: 1px solid black; padding: 5px;\">Cypher</th><th style=\"border: 1px solid black; padding: 5px;\">Timestamp</th></tr>");
+                "<th style=\"border: 1px solid black; padding: 5px;\">Output</th><th style=\"border: 1px solid black; padding: 5px;\">CypherInterface</th><th style=\"border: 1px solid black; padding: 5px;\">Timestamp</th></tr>");
         try {
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM cypherauditlog");
