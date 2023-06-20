@@ -10,6 +10,7 @@ import com.example.web.Decryption.DecryptionType2;
 import com.example.web.Encryption.Encryption;
 import com.example.web.Encryption.EncryptionType1;
 import com.example.web.Encryption.EncryptionType2;
+import com.example.web.Service.EncryptionService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
@@ -17,14 +18,18 @@ import jakarta.servlet.annotation.*;
 
 @WebServlet(name= "CypherServlet", urlPatterns = "/cypher") //localhost:8080/cypher
 public class CypherServlet extends HttpServlet {
-    private final Encryption encryptionType1 = new EncryptionType1();
-    private final Encryption encryptionType2 = new EncryptionType2();
+
+    Encryption encryption1 = new EncryptionType1();
+    Encryption encryption2 = new EncryptionType2();
+    EncryptionService service = new EncryptionService(encryption1,encryption2);
+//    private final Encryption encryptionType1 = new EncryptionType1();
+//    private final Encryption encryptionType2 = new EncryptionType2();
     private final Decryption decryptionType1 = new DecryptionType1();
     private final Decryption decryptionType2 = new DecryptionType2();
     private final DataBase dataBase = new DataBase();
     String responseFromCypher = null;
 
-    protected void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException{
+    protected void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException{
         ServletContext context = getServletContext();
         Connection conn = (Connection) context.getAttribute("databaseConnection");
         String inputFromUser = request.getParameter("param1");
@@ -34,9 +39,9 @@ public class CypherServlet extends HttpServlet {
         response.setContentType("text/plain");
         if (convertedHelper==0) {
             if (typeOfCypher.equals("Encryption type 1")) {
-                responseFromCypher = encryptionType1.performEncryption(inputFromUser);
+                responseFromCypher = service.callEncryptionType1(inputFromUser);
             } else if (typeOfCypher.equals("Encryption type 2")) {
-                responseFromCypher = encryptionType2.performEncryption(inputFromUser);
+                responseFromCypher = service.callEncryptionType2(inputFromUser);
             }
             dataBase.insertMassage(inputFromUser, responseFromCypher, typeOfCypher,conn);
         } else if (convertedHelper==1 && responseFromCypher != null && !responseFromCypher.equals(inputFromUser)) {

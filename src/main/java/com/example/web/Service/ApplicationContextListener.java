@@ -8,7 +8,6 @@ import jakarta.servlet.annotation.WebListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import jakarta.servlet.ServletContextEvent;
 
 @WebListener
 public class ApplicationContextListener implements ServletContextListener {
@@ -28,9 +27,6 @@ public class ApplicationContextListener implements ServletContextListener {
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
-
-
-
     }
 
     @Override
