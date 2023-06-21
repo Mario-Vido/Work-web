@@ -17,7 +17,6 @@ import jakarta.servlet.annotation.*;
 public class CypherServlet extends HttpServlet {
     String responseFromCypher = null;
 
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ServletContext context = getServletContext();
         Connection conn = (Connection) context.getAttribute("databaseConnection");
@@ -29,14 +28,14 @@ public class CypherServlet extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
             CypherService service = new CypherService();
-            switch (typeOfCypher) {
-                case "Cypher 0":
-                    responseFromCypher = service.callEncryptionType1(inputFromUser);
-                    break;
-                case "Cypher 1":
-                    responseFromCypher = service.callEncryptionType2(inputFromUser);
-                    break;
-            }
+                switch (typeOfCypher) {
+                        case "Cypher 0":
+                        responseFromCypher = service.callEncryptionType1(inputFromUser);
+                        break;
+                        case "Cypher 1":
+                        responseFromCypher = service.callEncryptionType2(inputFromUser);
+                        break;
+                        }
 
             DataBase dataBase = new DataBase();
             dataBase.insertMassage(inputFromUser, responseFromCypher, typeOfCypher, conn);

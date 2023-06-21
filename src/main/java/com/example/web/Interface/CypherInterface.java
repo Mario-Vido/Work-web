@@ -13,5 +13,5 @@ public interface CypherInterface {
 
     String createStringFromKeys(HashMap<String, Cypher> cypherMap, Cypher[] cyphers);
 
-    public HashMap<String, Cypher> creatingCypherMap(HashMap<String, Cypher> cypherMap,Cypher[] cyphers);
+    public HashMap<String, Cypher> creatingHashMap(HashMap<String, Cypher> cypherMap,Cypher[] cyphers);
 }

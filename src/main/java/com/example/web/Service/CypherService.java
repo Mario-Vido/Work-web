@@ -92,8 +92,15 @@ public class CypherService implements CypherInterface {
         Set<String> names = cypherMap.keySet();
         return String.join(",", names);
     }
+    public void creteCyphers(Cypher[] cyphers){
+        for (int i = 0; i < cyphers.length; i++) {
+            String name = "Cypher " + i;
 
-    public HashMap<String, Cypher> creatingCypherMap(HashMap<String, Cypher> cypherMap,Cypher[] cyphers){
+            cyphers[i] = new Cypher(i, name);
+        }
+    }
+
+    public HashMap<String, Cypher> creatingHashMap(HashMap<String, Cypher> cypherMap,Cypher[] cyphers){
         for (Cypher cypher : cyphers) {
             cypherMap.put(cypher.getName(), cypher);
         }

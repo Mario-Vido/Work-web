@@ -14,4 +14,7 @@ public class Cypher {
         return name;
     }
 
+    public int getKey() {
+        return key;
+    }
 }

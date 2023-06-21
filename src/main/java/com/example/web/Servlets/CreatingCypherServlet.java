@@ -20,11 +20,7 @@ public class CreatingCypherServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         CypherService service = new CypherService();
-        for (int i = 0; i < cyphers.length; i++) {
-            String name = "Cypher " + i;
-
-            cyphers[i] = new Cypher(i, name);
-        }
+        service.creteCyphers(cyphers);
 
         String namesString =service.createStringFromKeys(cypherMap,cyphers);
 
