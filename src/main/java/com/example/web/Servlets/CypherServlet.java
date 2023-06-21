@@ -2,15 +2,18 @@ package com.example.web.Servlets;
 
 import java.io.*;
 import java.sql.Connection;
+import java.util.HashMap;
+
 import com.example.web.DataBase.DataBase;
-import com.example.web.Service.EncryptionService;
+import com.example.web.Objects.Cypher;
+import com.example.web.Service.CypherService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 
 
-@WebServlet(name= "CypherServlet", urlPatterns = "/cypher") //localhost:8080/cypher
+@WebServlet(name= "CypherServlet", urlPatterns = "/cypher")
 public class CypherServlet extends HttpServlet {
     String responseFromCypher = null;
 
@@ -23,8 +26,9 @@ public class CypherServlet extends HttpServlet {
 
         response.setContentType("text/plain");
 
+
         try (PrintWriter out = response.getWriter()) {
-            EncryptionService service = new EncryptionService();
+            CypherService service = new CypherService();
             switch (typeOfCypher) {
                 case "Cypher 0":
                     responseFromCypher = service.callEncryptionType1(inputFromUser);
@@ -38,37 +42,7 @@ public class CypherServlet extends HttpServlet {
             dataBase.insertMassage(inputFromUser, responseFromCypher, typeOfCypher, conn);
             out.println(responseFromCypher);
         }
-
-
-
-//        try (PrintWriter out = response.getWriter()) {
-//            if (convertedHelper == 0) {
-//                EncryptionService service = new EncryptionService();
-//
-//                switch (typeOfCypher) {
-//                    case "Encryption type 1":
-//                        responseFromCypher = service.callEncryptionType1(inputFromUser);
-//                        break;
-//                    case "Encryption type 2":
-//                        responseFromCypher = service.callEncryptionType2(inputFromUser);
-//                        break;
-//                }
-//
-//                DataBase dataBase = new DataBase();
-//                dataBase.insertMassage(inputFromUser, responseFromCypher, typeOfCypher, conn);
-//            } else if (convertedHelper == 1 && responseFromCypher != null && !responseFromCypher.equals(inputFromUser)) {
-//                DecryptionService decryptionService = new DecryptionService();
-//
-//                switch (typeOfCypher) {
-//                    case "Encryption type 1":
-//                        responseFromCypher = decryptionService.callDecryptionType1(responseFromCypher);
-//                        break;
-//                    case "Encryption type 2":
-//                        responseFromCypher = decryptionService.callDecryptionType2(responseFromCypher);
-//                        break;
-//                }
-//            }
-        }
     }
+}
 
 
