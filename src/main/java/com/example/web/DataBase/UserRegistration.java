@@ -19,6 +19,5 @@ public class UserRegistration {
         System.out.println(statement);
 
         statement.executeUpdate();
-
     }
 }

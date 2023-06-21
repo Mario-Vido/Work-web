@@ -6,7 +6,7 @@
 </head>
 <body>
 <br/>
-<a href="registration-servlet">Klikni pre zobrazenie tabulky</a>
+<a href="/table">Klikni pre zobrazenie tabulky</a>
 <h1>Server is running</h1>
 </body>
 </html>

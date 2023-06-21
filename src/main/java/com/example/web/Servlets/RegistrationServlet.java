@@ -28,7 +28,7 @@ public class RegistrationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ServletContext context = getServletContext();
-        Connection conn = (Connection) context.getAttribute("userRegistration");
+        Connection conn = (Connection) context.getAttribute("userDataBase");
 
 
         String login = req.getParameter("login");
@@ -45,7 +45,7 @@ public class RegistrationServlet extends HttpServlet {
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
-        RequestDispatcher dispatcher = req.getRequestDispatcher("index.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("login.jsp");
         dispatcher.forward(req,resp);
     }
 }
