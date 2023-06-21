@@ -1,5 +1,6 @@
 package com.example.web.Servlets;
 
+import com.example.web.Service.LoginService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,56 +16,23 @@ import java.sql.SQLException;
 public class LoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        LoginService service = new LoginService();
         ServletContext context = getServletContext();
         Connection connectionToUsedDatabase = (Connection) context.getAttribute("userDataBase");
 
         String username = request.getParameter("login");
         String password = request.getParameter("password");
 
-        boolean isAuthenticated = authenticateUser(connectionToUsedDatabase, username, password);
+        boolean isAuthenticated = service.authenticateUser(connectionToUsedDatabase, username, password);
 
         if (isAuthenticated) {
-            int userId = getUserIdByUsername(connectionToUsedDatabase, username);
+            int userId = service.getUserIdByUsername(connectionToUsedDatabase, username);
 
             request.getSession().setAttribute("userId", userId);
 
             response.sendRedirect("index.jsp");
         } else {
             response.sendRedirect("login.jsp?error=1");
-        }
-    }
-
-    private boolean authenticateUser(Connection connection, String login, String password) {
-        String query = "SELECT * FROM users WHERE login = ? AND password = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, login);
-            statement.setString(2, password);
-
-            ResultSet resultSet = statement.executeQuery();
-
-            return resultSet.next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    private int getUserIdByUsername(Connection connection, String username) {
-        String query = "SELECT id FROM users WHERE login = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, username);
-
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                return resultSet.getInt("id");
-            } else {
-                return -1;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
         }
     }
 }

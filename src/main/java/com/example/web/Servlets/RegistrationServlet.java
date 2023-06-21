@@ -49,7 +49,3 @@ public class RegistrationServlet extends HttpServlet {
         dispatcher.forward(req,resp);
     }
 }
-/*
-
-
- */
