@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>Login</h1>
-<form action="login-servlet" method="post">
+<form action="test-login" method="post">
   <label for="login">Username:</label>
   <input type="text" id="login" name="login" required><br><br>
 
