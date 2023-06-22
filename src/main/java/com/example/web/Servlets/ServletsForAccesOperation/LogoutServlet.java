@@ -1,4 +1,4 @@
-package com.example.web.Servlets;
+package com.example.web.Servlets.ServletsForAccesOperation;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

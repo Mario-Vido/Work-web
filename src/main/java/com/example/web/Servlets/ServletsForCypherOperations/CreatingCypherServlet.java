@@ -1,4 +1,4 @@
-package com.example.web.Servlets;
+package com.example.web.Servlets.ServletsForCypherOperations;
 
 import com.example.web.Objects.Cypher;
 import com.example.web.Service.CypherService;

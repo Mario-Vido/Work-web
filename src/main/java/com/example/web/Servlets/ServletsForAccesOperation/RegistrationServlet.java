@@ -1,9 +1,7 @@
-package com.example.web.Servlets;
+package com.example.web.Servlets.ServletsForAccesOperation;
 
 import com.example.web.Objects.User;
 import com.example.web.Service.LoginService;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,18 +15,22 @@ import java.sql.SQLException;
 @WebServlet(name = "RegistrationServlet", value = "/registration-servlet")
 public class RegistrationServlet extends HttpServlet {
 
+    private LoginService loginService;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        loginService = new LoginService();
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher dispatcher = req.getRequestDispatcher("registration.jsp");
-        dispatcher.forward(req,resp);
+        resp.sendRedirect("registration.jsp");
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        LoginService loginService = new LoginService();
-        ServletContext context = getServletContext();
-        Connection conn = (Connection) context.getAttribute("userDataBase");
-
+        Connection connection = (Connection) getServletContext().getAttribute("userDataBase");
 
         String login = req.getParameter("login");
         String password = req.getParameter("password");
@@ -38,16 +40,16 @@ public class RegistrationServlet extends HttpServlet {
         user.setLogin(login);
         user.setPassword(password);
         user.setRole(role);
-        if(loginService.authenticateUser(conn,login,password)){
-            resp.sendRedirect("registration.jsp?error=1");
-        }else{
-            try {
-                loginService.registerUser(user,conn);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+
+        try {
+            if (loginService.authenticateUser(connection, login, password)) {
+                resp.sendRedirect("registration.jsp?error=1");
+            } else {
+                loginService.registerUser(user, connection);
+                resp.sendRedirect("login.jsp");
             }
-            RequestDispatcher dispatcher = req.getRequestDispatcher("login.jsp");
-            dispatcher.forward(req,resp);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

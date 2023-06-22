@@ -1,4 +1,4 @@
-package com.example.web.Servlets;
+package com.example.web.Servlets.ServletsForAccesOperation;
 
 import com.example.web.Service.LoginService;
 import jakarta.servlet.*;
@@ -14,8 +14,7 @@ public class LoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         LoginService service = new LoginService();
-        ServletContext context = getServletContext();
-        Connection connectionToUsedDatabase = (Connection) context.getAttribute("userDataBase");
+        Connection connectionToUsedDatabase = getDatabaseConnection();
 
         String username = request.getParameter("login");
         String password = request.getParameter("password");
@@ -26,14 +25,18 @@ public class LoginServlet extends HttpServlet {
             int userId = service.getUserIdByUsername(connectionToUsedDatabase, username);
 
             request.getSession().setAttribute("userId", userId);
+            String userRole = service.getUserRoleById(userId, connectionToUsedDatabase);
 
-            String userRole = service.getUserRoleById(userId,connectionToUsedDatabase);
-
-            request.getSession().setAttribute("role",userRole);
-
+            request.getSession().setAttribute("role", userRole);
             response.sendRedirect("index.jsp");
+
         } else {
             response.sendRedirect("login.jsp?error=1");
         }
+    }
+
+    private Connection getDatabaseConnection() {
+        ServletContext context = getServletContext();
+        return (Connection) context.getAttribute("userDataBase");
     }
 }

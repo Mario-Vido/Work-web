@@ -98,8 +98,6 @@ public class LoginService implements LoginInterface {
         statement.setString(2, user.getPassword());
         statement.setString(3, user.getRole());
 
-        System.out.println(statement);
-
         statement.executeUpdate();
     }
 

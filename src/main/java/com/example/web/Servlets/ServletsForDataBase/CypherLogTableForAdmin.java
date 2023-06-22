@@ -1,4 +1,4 @@
-package com.example.web.Servlets;
+package com.example.web.Servlets.ServletsForDataBase;
 
 import java.io.IOException;
 import java.sql.*;
@@ -8,14 +8,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "helloServlet", urlPatterns = "/table")
-public class TableServlet extends HttpServlet {
+@WebServlet(name = "CypherLogForAdmin", urlPatterns = "/cypher-log-for-admin")
+public class CypherLogTableForAdmin extends HttpServlet {
     Connection connection = null;
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         ServletContext context = getServletContext();
         Connection conn = (Connection) context.getAttribute("databaseConnection");
-        String jsp = "cypherlog.jsp";
+        String jsp = "cypherLogForAdmin.jsp";
 
         response.setContentType("text/html");
         LoginService service = new LoginService();

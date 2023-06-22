@@ -1,9 +1,7 @@
-package com.example.web.Servlets;
+package com.example.web.Servlets.ServletsForCypherOperations;
 
 import java.io.*;
 import java.sql.Connection;
-import java.util.HashMap;
-
 import com.example.web.DataBase.DataBase;
 import com.example.web.Service.CypherService;
 import com.example.web.Service.LoginService;
