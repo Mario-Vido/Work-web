@@ -2,10 +2,9 @@ package com.example.web.Servlets.ServletsForAccesOperation;
 
 import com.example.web.Service.LoginService;
 import jakarta.servlet.*;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.WebServlet;
+
 import java.io.IOException;
 import java.sql.Connection;
 
@@ -13,6 +12,16 @@ import java.sql.Connection;
 public class LoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        HttpSession session = request.getSession();
+
+// Get the session ID
+        String sessionID = session.getId();
+
+// Set the session ID as a cookie in the response
+        response.addCookie(new Cookie("JSESSIONID", sessionID));
+        System.out.println(sessionID);
+
         LoginService service = new LoginService();
         Connection connectionToUsedDatabase = getDatabaseConnection();
 

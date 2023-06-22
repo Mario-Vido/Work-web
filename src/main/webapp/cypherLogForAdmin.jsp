@@ -5,7 +5,7 @@
 <head>
   <title>Logs of encryption</title>
 </head>
-<body>
+<body <% response.setHeader("Cache-Control","no-cache ,no-store , must-revalidate"); %>>
 <table style="border-collapse: collapse;">
   <tr style="border: 1px solid black;">
     <th style="border: 1px solid black; padding: 5px;">ID</th>

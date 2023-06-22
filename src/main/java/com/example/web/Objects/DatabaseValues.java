@@ -3,12 +3,12 @@ package com.example.web.Objects;
 import java.sql.Timestamp;
 
 public class DatabaseValues {
-    private int id;
-    private String input;
-    private String output;
-    private String cypher;
-    private java.sql.Timestamp timestamp;
-    private Integer idOfUser;
+    private final int id;
+    private final String input;
+    private final String output;
+    private final String cypher;
+    private final java.sql.Timestamp timestamp;
+    private final Integer idOfUser;
 
     public DatabaseValues(int id, String input, String output, String cypher, Timestamp timestamp, Integer idOfUser) {
         this.id = id;
