@@ -39,7 +39,6 @@ public class CypherService implements CypherInterface {
         if (stringBuilder.length() > 2) {
             stringBuilder.setLength(stringBuilder.length() - 2);
         }
-
         return stringBuilder.toString();
     }
 
