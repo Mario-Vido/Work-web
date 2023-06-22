@@ -8,9 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.annotation.WebServlet;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 @WebServlet(name = "loginServlet", value = "/login-servlet")
 public class LoginServlet extends HttpServlet {
@@ -29,6 +26,10 @@ public class LoginServlet extends HttpServlet {
             int userId = service.getUserIdByUsername(connectionToUsedDatabase, username);
 
             request.getSession().setAttribute("userId", userId);
+
+            String userRole = service.getUserRoleById(userId,connectionToUsedDatabase);
+
+            request.getSession().setAttribute("role",userRole);
 
             response.sendRedirect("index.jsp");
         } else {

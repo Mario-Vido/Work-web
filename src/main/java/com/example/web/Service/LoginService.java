@@ -1,6 +1,7 @@
 package com.example.web.Service;
 
 import com.example.web.Interface.LoginInterface;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -44,4 +45,46 @@ public class LoginService implements LoginInterface {
             return -1;
         }
     }
+
+    @Override
+    public String checkUserAuthorization(HttpServletRequest request) {
+        String role = (String) request.getSession().getAttribute("role");
+
+        if (role == null) {
+            // User ID not found in the session, user is not authorized
+            return "role not found";
+        }
+        // Perform authorization checks based on the user's role
+        if ("Admin".equals(role)) {
+            // Allow access for admin role
+            return "Admin";
+        } else if ("User".equals(role)) {
+            // Allow access for user role
+            return "User";
+        }
+
+        // Default case: user is not authorized
+        return "User is not authorized";
+    }
+
+    @Override
+    public String getUserRoleById(Integer userId,Connection connection) {
+        String query = "SELECT role FROM users WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getString("role");
+            } else {
+                return "Unknown";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Unknown";
+        }
+    }
+
 }
