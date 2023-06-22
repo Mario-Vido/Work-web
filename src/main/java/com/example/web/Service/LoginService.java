@@ -1,12 +1,17 @@
 package com.example.web.Service;
 
 import com.example.web.Interface.LoginInterface;
+import com.example.web.Objects.DatabaseValues;
+import com.example.web.Objects.User;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginService implements LoginInterface {
 
@@ -51,19 +56,16 @@ public class LoginService implements LoginInterface {
         String role = (String) request.getSession().getAttribute("role");
 
         if (role == null) {
-            // User ID not found in the session, user is not authorized
             return "role not found";
         }
-        // Perform authorization checks based on the user's role
+
         if ("Admin".equals(role)) {
-            // Allow access for admin role
             return "Admin";
         } else if ("User".equals(role)) {
-            // Allow access for user role
             return "User";
         }
 
-        // Default case: user is not authorized
+
         return "User is not authorized";
     }
 
@@ -85,6 +87,48 @@ public class LoginService implements LoginInterface {
             e.printStackTrace();
             return "Unknown";
         }
+    }
+
+    @Override
+    public void registerUser(User user, Connection connection) throws SQLException {
+        String INSERT_USERS_SQL = "INSERT INTO users (login, password, role) VALUES (?, ?, ?);";
+
+        PreparedStatement statement = connection.prepareStatement(INSERT_USERS_SQL);
+        statement.setString(1,user.getLogin());
+        statement.setString(2, user.getPassword());
+        statement.setString(3, user.getRole());
+
+        System.out.println(statement);
+
+        statement.executeUpdate();
+    }
+
+    @Override
+    public void createTable(Connection conn,HttpServletRequest request, HttpServletResponse response,String jsp) throws ServletException, IOException {
+        List<DatabaseValues> databaseValuesList = new ArrayList<>();
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM cypherauditlog");
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String input = resultSet.getString("input");
+                String output = resultSet.getString("output");
+                String cypher = resultSet.getString("cypher");
+                Timestamp timestamp = resultSet.getTimestamp("timestamp");
+                Integer idOfUser = resultSet.getInt("idofuser");
+
+                DatabaseValues databaseValues = new DatabaseValues(id, input, output, cypher, timestamp,idOfUser);
+                databaseValuesList.add(databaseValues);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        request.setAttribute("databaseValuesList", databaseValuesList);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(jsp);
+        dispatcher.forward(request, response);
     }
 
 }

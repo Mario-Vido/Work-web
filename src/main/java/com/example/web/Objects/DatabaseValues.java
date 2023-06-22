@@ -1,6 +1,6 @@
 package com.example.web.Objects;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 public class DatabaseValues {
     private int id;
@@ -8,13 +8,15 @@ public class DatabaseValues {
     private String output;
     private String cypher;
     private java.sql.Timestamp timestamp;
+    private Integer idOfUser;
 
-    public DatabaseValues(int id, String input, String output, String cypher, java.sql.Timestamp timestamp) {
+    public DatabaseValues(int id, String input, String output, String cypher, Timestamp timestamp, Integer idOfUser) {
         this.id = id;
         this.input = input;
         this.output = output;
         this.cypher = cypher;
         this.timestamp = timestamp;
+        this.idOfUser = idOfUser;
     }
 
     public int getId() {
@@ -35,6 +37,10 @@ public class DatabaseValues {
 
     public java.sql.Timestamp getTimestamp() {
         return timestamp;
+    }
+
+    public Integer getIdOfUser() {
+        return idOfUser;
     }
 }
 

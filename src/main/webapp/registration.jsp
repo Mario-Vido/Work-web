@@ -22,6 +22,9 @@
         </table>
         <input type="submit" value="Submit" />
     </form>
+    <% if (request.getParameter("error") != null) { %>
+    <p style="color: red;">Username already used</p>
+    <% } %>
 </div>
 </body>
 </html>

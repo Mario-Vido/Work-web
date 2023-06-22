@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/table"})
+@WebFilter(urlPatterns = {"/index.jsp"})
 public class AuthorizationFilter implements Filter {
 
     @Override
@@ -19,9 +19,9 @@ public class AuthorizationFilter implements Filter {
         String isAuthorized = service.checkUserAuthorization(request);
 
         if (isAuthorized.equals("Admin")) {
-            response.sendRedirect(request.getContextPath() + "/index.jsp");
+            response.sendRedirect(request.getContextPath() + "/table");
         } else if(isAuthorized.equals("User")) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/table");
         }
     }
 }
