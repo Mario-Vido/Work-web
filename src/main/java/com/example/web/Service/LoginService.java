@@ -128,5 +128,4 @@ public class LoginService implements LoginInterface {
         RequestDispatcher dispatcher = request.getRequestDispatcher(jsp);
         dispatcher.forward(request, response);
     }
-
 }

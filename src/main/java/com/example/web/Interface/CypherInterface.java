@@ -4,16 +4,17 @@ import com.example.web.Objects.Cypher;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface CypherInterface {
-    String callEncryptionType1(String text);
-    String callEncryptionType2(String text);
 
-    String callDecryptionType1(String text);
-    String callDecryptionType2(String text);
+    String performEncryption(Cypher cypher, String input);
 
-//    String createStringFromKeys(HashMap<String, Cypher> cypherMap, Cypher[] cyphers);
+    String performDecryption(Cypher cypher, String input);
 
-//    public HashMap<String, Cypher> creatingHashMap(HashMap<String, Cypher> cypherMap,Cypher[] cyphers);
+    Map<String, Cypher> createCypherMap(List<Cypher> cypherList);
+
+    String generateStringFromKeys(Map<String, Cypher> cypherMap);
+
     List<Cypher> createCyphers(int count);
 }

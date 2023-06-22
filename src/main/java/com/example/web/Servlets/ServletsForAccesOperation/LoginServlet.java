@@ -15,12 +15,9 @@ public class LoginServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-// Get the session ID
         String sessionID = session.getId();
 
-// Set the session ID as a cookie in the response
         response.addCookie(new Cookie("JSESSIONID", sessionID));
-        System.out.println(sessionID);
 
         LoginService service = new LoginService();
         Connection connectionToUsedDatabase = getDatabaseConnection();

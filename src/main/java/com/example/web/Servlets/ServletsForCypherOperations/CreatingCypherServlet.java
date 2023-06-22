@@ -2,12 +2,8 @@ package com.example.web.Servlets.ServletsForCypherOperations;
 
 import com.example.web.Objects.Cypher;
 import com.example.web.Service.CypherService;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -18,17 +14,22 @@ import java.util.Map;
 public class CreatingCypherServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        HttpSession session = request.getSession();
+
+        String sessionID = session.getId();
+
+        response.addCookie(new Cookie("JSESSIONID", sessionID));
+        System.out.println(sessionID);
+
         CypherService service = new CypherService();
-        ServletContext servletContext = getServletContext();
+
 
         List<Cypher> cypherList = service.createCyphers(2);
         Map<String, Cypher> cypherMap = service.createCypherMap(cypherList);
         String namesString = service.generateStringFromKeys(cypherMap);
-        servletContext.setAttribute("HashMapOfCyphers",cypherMap);
+        request.getSession().setAttribute("HashMapOfCyphers",cypherMap);
 
-
-
-        System.out.println(servletContext.getAttributeNames());
 
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
