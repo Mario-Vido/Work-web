@@ -5,17 +5,17 @@ import com.example.web.Interface.LoginInterface;
 import com.example.web.Objects.Cypher;
 import com.example.web.Objects.DatabaseValues;
 import com.example.web.Objects.User;
-import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.*;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+
 
 public class LoginService implements LoginInterface {
 
@@ -75,7 +75,7 @@ public class LoginService implements LoginInterface {
 
     @Override
     public String getUserRoleById(Integer userId,Connection connection) {
-        String query = "SELECT role FROM users WHERE id = ?";
+        String query = "SELECT role_id FROM user_roles WHERE user_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
@@ -83,27 +83,41 @@ public class LoginService implements LoginInterface {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                return resultSet.getString("role");
+                if(resultSet.getInt("role_id")==1) {
+                    return "Admin";
+                } else if((resultSet.getInt("role_id")==2)){
+                    return "User";
+                }
             } else {
                 return "Unknown";
             }
         } catch (SQLException e) {
             e.printStackTrace();
             return "Unknown";
-        }
+        }return "Unknown";
     }
 
     @Override
     public void registerUser(User user, Connection connection) throws SQLException {
-        String INSERT_USERS_SQL = "INSERT INTO users (login, password, role) VALUES (?, ?, ?);";
+        String INSERT_USERS_SQL = "INSERT INTO users (login, password) VALUES (?, ?);";
+        String INSERT_USER_ROLE_SQL = "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?);";
 
-        PreparedStatement statement = connection.prepareStatement(INSERT_USERS_SQL);
-        statement.setString(1,user.getLogin());
-        statement.setString(2, user.getPassword());
-        statement.setString(3, user.getRole());
+        PreparedStatement userStatement = connection.prepareStatement(INSERT_USERS_SQL, Statement.RETURN_GENERATED_KEYS);
+        userStatement.setString(1, user.getLogin());
+        userStatement.setString(2, user.getPassword());
+        userStatement.executeUpdate();
 
-        statement.executeUpdate();
+        ResultSet generatedKeys = userStatement.getGeneratedKeys();
+        if (generatedKeys.next()) {
+            int userId = generatedKeys.getInt(1);
+
+            PreparedStatement roleStatement = connection.prepareStatement(INSERT_USER_ROLE_SQL);
+            roleStatement.setInt(1, userId);
+            roleStatement.setInt(2, 2);
+            roleStatement.executeUpdate();
+        }
     }
+
 
     @Override
     public void createTable(Connection conn,HttpServletRequest request, HttpServletResponse response,String jsp) throws ServletException, IOException {
@@ -133,7 +147,7 @@ public class LoginService implements LoginInterface {
         dispatcher.forward(request, response);
     }
 
-    public void Encypher(HttpServletRequest request, HttpServletResponse response, ServletContext context, String responseFromCypher) throws IOException {
+    public void Encypher(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException {
         HashMap<String, Cypher> cypherMap = (HashMap<String, Cypher>) request.getSession().getAttribute("HashMapOfCyphers");
         System.out.println(cypherMap + "toto je po stlaceni tlacitka");
         System.out.println("Session ID second: " + request.getSession().getId());
@@ -150,6 +164,7 @@ public class LoginService implements LoginInterface {
             CypherService service = new CypherService();
             Cypher matchingCypher = cypherMap.get(typeOfCypher);
 
+            String responseFromCypher;
             if (matchingCypher != null) {
                 responseFromCypher = service.performEncryption(matchingCypher, inputFromUser);
             } else {
@@ -159,6 +174,118 @@ public class LoginService implements LoginInterface {
             DataBase dataBase = new DataBase();
             int idOfUser = getUserIdByUsername(connectionToUserDataBase, username);
             dataBase.insertMassage(inputFromUser, responseFromCypher, typeOfCypher, databaseConnection, idOfUser);
+            out.println(responseFromCypher);
+        }
+    }
+    public void LoginFromClient(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException {
+        boolean isAuthenticated;
+        Connection connectionToUsedDatabase = (Connection) context.getAttribute("userDataBase");
+
+        String username = request.getParameter("login");
+        String password = request.getParameter("password");
+
+        response.setContentType("text/plain");
+
+        try (PrintWriter out = response.getWriter()) {
+            isAuthenticated = authenticateUser(connectionToUsedDatabase, username, password);
+            if (isAuthenticated) {
+                out.println("true");
+            } else {
+                out.println("false");
+            }
+        }
+    }
+
+    public void Logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+
+        session.removeAttribute("login");
+
+        session.removeAttribute("userId");
+
+        session.removeAttribute("role");
+
+        session.removeAttribute("databaseValuesList");
+
+        session.invalidate();
+
+        response.sendRedirect("/");
+    }
+
+    public void Registration(HttpServletRequest req, HttpServletResponse resp,Connection connection){
+        String login = req.getParameter("login");
+        String password = req.getParameter("password");
+
+        User user = new User();
+        user.setLogin(login);
+        user.setPassword(password);
+
+        try {
+            if (authenticateUser(connection, login, password)) {
+                resp.sendRedirect("registration.jsp?error=1");
+            } else {
+                registerUser(user, connection);
+                resp.sendRedirect("login.jsp");
+            }
+        } catch (SQLException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void LoginFromServer(HttpServletRequest request, HttpServletResponse response, Connection connectionToUsedDatabase) throws IOException {
+        String username = request.getParameter("login");
+        String password = request.getParameter("password");
+
+        boolean isAuthenticated = authenticateUser(connectionToUsedDatabase, username, password);
+
+        if (isAuthenticated) {
+            int userId = getUserIdByUsername(connectionToUsedDatabase, username);
+
+            request.getSession().setAttribute("userId", userId);
+            String userRole = getUserRoleById(userId, connectionToUsedDatabase);
+
+            request.getSession().setAttribute("role", userRole);
+            response.sendRedirect("index.jsp");
+
+        } else {
+            response.sendRedirect("login.jsp?error=1");
+        }
+    }
+
+    public void CreatingCyphers(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        CypherService service = new CypherService();
+
+        List<Cypher> cypherList = service.createCyphers(2);
+        Map<String, Cypher> cypherMap = service.createCypherMap(cypherList);
+        String namesString = service.generateStringFromKeys(cypherMap);
+        request.getSession().setAttribute("HashMapOfCyphers",cypherMap);
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+
+        try (PrintWriter out = response.getWriter()) {
+            out.println(namesString);
+        }
+    }
+
+    public void Decypher(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String responseFromCypher;
+        String valueAfterCypher = request.getParameter("param1");
+        String typeOfCypher = request.getParameter("param2");
+        HashMap<String,Cypher> cypherMap = (HashMap<String, Cypher>) request.getSession().getAttribute("HashMapOfCyphers");
+
+        response.setContentType("text/plain");
+
+        try (PrintWriter out = response.getWriter()) {
+
+            CypherService service = new CypherService();
+            Cypher matchingCypher = cypherMap.get(typeOfCypher);
+
+            if (matchingCypher != null) {
+                responseFromCypher = service.performDecryption(matchingCypher, valueAfterCypher);
+            } else {
+                responseFromCypher = "Invalid type of cypher";
+            }
+
             out.println(responseFromCypher);
         }
     }

@@ -2,6 +2,7 @@ package com.example.web.Servlets.ServletsForCypherOperations;
 
 import com.example.web.Objects.Cypher;
 import com.example.web.Service.CypherService;
+import com.example.web.Service.LoginService;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
@@ -14,26 +15,19 @@ import java.util.Map;
 public class CreatingCypherServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        LoginService service = new LoginService();
+        service.CreatingCyphers(request,response);
+//        CypherService service = new CypherService();
 //
-//        HttpSession session = request.getSession();
+//        List<Cypher> cypherList = service.createCyphers(2);
+//        Map<String, Cypher> cypherMap = service.createCypherMap(cypherList);
+//        String namesString = service.generateStringFromKeys(cypherMap);
+//        request.getSession().setAttribute("HashMapOfCyphers",cypherMap);
+//        response.setContentType("text/plain");
+//        response.setCharacterEncoding("UTF-8");
 //
-//        String sessionID = session.getId();
-//
-//        response.addCookie(new Cookie("JSESSIONID", sessionID));
-
-        CypherService service = new CypherService();
-
-        List<Cypher> cypherList = service.createCyphers(2);
-        Map<String, Cypher> cypherMap = service.createCypherMap(cypherList);
-        String namesString = service.generateStringFromKeys(cypherMap);
-        request.getSession().setAttribute("HashMapOfCyphers",cypherMap);
-        System.out.println(cypherMap + "toto je pri vytvarani sifri");
-        System.out.println("Session ID first: " + request.getSession().getId());
-        response.setContentType("text/plain");
-        response.setCharacterEncoding("UTF-8");
-
-        try (PrintWriter out = response.getWriter()) {
-            out.println(namesString);
-        }
+//        try (PrintWriter out = response.getWriter()) {
+//            out.println(namesString);
+//        }
     }
 }

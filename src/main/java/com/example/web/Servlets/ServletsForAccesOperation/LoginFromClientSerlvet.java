@@ -15,24 +15,25 @@ public class LoginFromClientSerlvet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        boolean isAuthenticated;
         LoginService service = new LoginService();
         ServletContext context = getServletContext();
-        Connection connectionToUsedDatabase = (Connection) context.getAttribute("userDataBase");
 
-        String username = request.getParameter("login");
-        String password = request.getParameter("password");
-
-        response.setContentType("text/plain");
-
-        try (PrintWriter out = response.getWriter()) {
-            isAuthenticated = service.authenticateUser(connectionToUsedDatabase, username, password);
-            if (isAuthenticated) {
-                out.println("true");
-            } else {
-                out.println("false");
-            }
-        }
+        service.LoginFromClient(request,response,context);
+//        Connection connectionToUsedDatabase = (Connection) context.getAttribute("userDataBase");
+//
+//        String username = request.getParameter("login");
+//        String password = request.getParameter("password");
+//
+//        response.setContentType("text/plain");
+//
+//        try (PrintWriter out = response.getWriter()) {
+//            isAuthenticated = service.authenticateUser(connectionToUsedDatabase, username, password);
+//            if (isAuthenticated) {
+//                out.println("true");
+//            } else {
+//                out.println("false");
+//            }
+//        }
     }
 
 }

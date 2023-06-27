@@ -16,23 +16,25 @@ public class TestLoginServlet extends HttpServlet {
         LoginService service = new LoginService();
         Connection connectionToUsedDatabase = getDatabaseConnection();
 
-        String username = request.getParameter("login");
-        String password = request.getParameter("password");
+        service.LoginFromServer(request,response,connectionToUsedDatabase);
 
-        boolean isAuthenticated = service.authenticateUser(connectionToUsedDatabase, username, password);
-
-        if (isAuthenticated) {
-            int userId = service.getUserIdByUsername(connectionToUsedDatabase, username);
-
-            request.getSession().setAttribute("userId", userId);
-            String userRole = service.getUserRoleById(userId, connectionToUsedDatabase);
-
-            request.getSession().setAttribute("role", userRole);
-            response.sendRedirect("index.jsp");
-
-        } else {
-            response.sendRedirect("login.jsp?error=1");
-        }
+//        String username = request.getParameter("login");
+//        String password = request.getParameter("password");
+//
+//        boolean isAuthenticated = service.authenticateUser(connectionToUsedDatabase, username, password);
+//
+//        if (isAuthenticated) {
+//            int userId = service.getUserIdByUsername(connectionToUsedDatabase, username);
+//
+//            request.getSession().setAttribute("userId", userId);
+//            String userRole = service.getUserRoleById(userId, connectionToUsedDatabase);
+//
+//            request.getSession().setAttribute("role", userRole);
+//            response.sendRedirect("index.jsp");
+//
+//        } else {
+//            response.sendRedirect("login.jsp?error=1");
+//        }
     }
 
     private Connection getDatabaseConnection() {
