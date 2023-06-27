@@ -8,13 +8,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 
-
 @WebServlet(name= "DecypherServlet", urlPatterns = "/decypher")
 public class DecypherServlet extends HttpServlet {
     String responseFromCypher = null;
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String valueAfterCypher = request.getParameter("param1");
         String typeOfCypher = request.getParameter("param2");
         HashMap<String,Cypher> cypherMap = (HashMap<String, Cypher>) request.getSession().getAttribute("HashMapOfCyphers");

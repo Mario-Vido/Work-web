@@ -1,15 +1,20 @@
 package com.example.web.Service;
 
+import com.example.web.DataBase.DataBase;
 import com.example.web.Interface.LoginInterface;
+import com.example.web.Objects.Cypher;
 import com.example.web.Objects.DatabaseValues;
 import com.example.web.Objects.User;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class LoginService implements LoginInterface {
@@ -126,5 +131,35 @@ public class LoginService implements LoginInterface {
         request.setAttribute("databaseValuesList", databaseValuesList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(jsp);
         dispatcher.forward(request, response);
+    }
+
+    public void Encypher(HttpServletRequest request, HttpServletResponse response, ServletContext context, String responseFromCypher) throws IOException {
+        HashMap<String, Cypher> cypherMap = (HashMap<String, Cypher>) request.getSession().getAttribute("HashMapOfCyphers");
+        System.out.println(cypherMap + "toto je po stlaceni tlacitka");
+        System.out.println("Session ID second: " + request.getSession().getId());
+
+        Connection databaseConnection = (Connection) context.getAttribute("databaseConnection");
+        Connection connectionToUserDataBase = (Connection) context.getAttribute("userDataBase");
+
+        String inputFromUser = request.getParameter("param1");
+        String typeOfCypher = request.getParameter("param2");
+        String username = request.getParameter("param3");
+
+        response.setContentType("text/plain");
+        try (PrintWriter out = response.getWriter()) {
+            CypherService service = new CypherService();
+            Cypher matchingCypher = cypherMap.get(typeOfCypher);
+
+            if (matchingCypher != null) {
+                responseFromCypher = service.performEncryption(matchingCypher, inputFromUser);
+            } else {
+                responseFromCypher = "Invalid type of cypher";
+            }
+
+            DataBase dataBase = new DataBase();
+            int idOfUser = getUserIdByUsername(connectionToUserDataBase, username);
+            dataBase.insertMassage(inputFromUser, responseFromCypher, typeOfCypher, databaseConnection, idOfUser);
+            out.println(responseFromCypher);
+        }
     }
 }
