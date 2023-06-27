@@ -17,9 +17,11 @@ public class LogoutServlet extends HttpServlet {
 
         session.removeAttribute("login");
 
-        session.removeAttribute("id");
+        session.removeAttribute("userId");
 
         session.removeAttribute("role");
+
+        session.removeAttribute("databaseValuesList");
 
         session.invalidate();
 

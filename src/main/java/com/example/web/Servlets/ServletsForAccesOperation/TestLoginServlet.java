@@ -37,11 +37,11 @@ public class TestLoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        HttpSession session = request.getSession();
-
-        String sessionID = session.getId();
-
-        response.addCookie(new Cookie("JSESSIONID", sessionID));
+//        HttpSession session = request.getSession();
+//
+//        String sessionID = session.getId();
+//
+//        response.addCookie(new Cookie("JSESSIONID", sessionID));
 
         LoginService service = new LoginService();
         Connection connectionToUsedDatabase = getDatabaseConnection();

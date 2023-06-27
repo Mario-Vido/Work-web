@@ -11,7 +11,7 @@ import java.io.IOException;
 public class AuthorizationFilter implements Filter {
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException{
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         LoginService service = new LoginService();
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
@@ -23,7 +23,7 @@ public class AuthorizationFilter implements Filter {
         } else if(isAuthorized.equals("User")) {
             response.sendRedirect(request.getContextPath() + "/table");
         }
-//        response.sendRedirect(request.getContextPath() + "/table");
+        filterChain.doFilter(servletRequest,servletResponse);
     }
 }
 

@@ -21,6 +21,8 @@ public class CypherServlet extends HttpServlet {
         LoginService loginService = new LoginService();
 
         HashMap<String,Cypher> cypherMap = (HashMap<String, Cypher>) request.getSession().getAttribute("HashMapOfCyphers");
+        System.out.println(cypherMap+"toto je po stlaceni tlacitka");
+        System.out.println("Session ID second: " + request.getSession().getId());
         ServletContext context = getServletContext();
 
         Connection databaseConnection = (Connection) context.getAttribute("databaseConnection");

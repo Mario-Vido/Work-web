@@ -1,6 +1,12 @@
 <%@ page import="com.example.web.Objects.DatabaseValues" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<% if (session==null || session.getAttribute("userId")==null){
+  response.sendRedirect("login.jsp");
+  return;
+}%>
+
 <html>
 <head>
   <title>Logs of encryption</title>
@@ -17,10 +23,7 @@
     <th style="border: 1px solid black; padding: 5px;">IdOfUser</th>
   </tr>
   <% List<DatabaseValues> databaseValuesList = (List<DatabaseValues>) request.getAttribute("databaseValuesList");
-<<<<<<< HEAD
     String role = (String) session.getAttribute("role");%>
-=======
->>>>>>> main
   <% for (DatabaseValues values : databaseValuesList) { %>
   <tr>
     <td style="border: 1px solid black; padding: 5px;"><%= values.getId() %></td>
@@ -45,15 +48,6 @@
       </form>
     </td>
   </tr>
-  <% if (role.equals("Admin")) { %>
-  <tr>
-    <td colspan="6" style="text-align: center;">
-      <form action="table" method="get">
-        <input type="submit" value="View my ciphers">
-      </form>
-    </td>
-  </tr>
-  <% } %>
 </table>
 </body>
 </html>

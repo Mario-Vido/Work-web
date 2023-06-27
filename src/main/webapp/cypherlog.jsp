@@ -1,6 +1,12 @@
 <%@ page import="com.example.web.Objects.DatabaseValues" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<% if (session==null || session.getAttribute("userId")==null){
+    response.sendRedirect("login.jsp");
+    return;
+}%>
+
 <html>
 <head>
     <title>Logs of encryption</title>

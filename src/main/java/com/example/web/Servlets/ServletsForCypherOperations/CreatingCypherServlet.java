@@ -14,12 +14,12 @@ import java.util.Map;
 public class CreatingCypherServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        HttpSession session = request.getSession();
-
-        String sessionID = session.getId();
-
-        response.addCookie(new Cookie("JSESSIONID", sessionID));
+//
+//        HttpSession session = request.getSession();
+//
+//        String sessionID = session.getId();
+//
+//        response.addCookie(new Cookie("JSESSIONID", sessionID));
 
         CypherService service = new CypherService();
 
@@ -27,8 +27,8 @@ public class CreatingCypherServlet extends HttpServlet {
         Map<String, Cypher> cypherMap = service.createCypherMap(cypherList);
         String namesString = service.generateStringFromKeys(cypherMap);
         request.getSession().setAttribute("HashMapOfCyphers",cypherMap);
-
-
+        System.out.println(cypherMap + "toto je pri vytvarani sifri");
+        System.out.println("Session ID first: " + request.getSession().getId());
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
 
