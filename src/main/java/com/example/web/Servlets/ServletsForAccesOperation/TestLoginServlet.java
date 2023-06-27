@@ -4,7 +4,6 @@ import com.example.web.Service.LoginService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-
 import java.io.IOException;
 import java.sql.Connection;
 
@@ -16,25 +15,7 @@ public class TestLoginServlet extends HttpServlet {
         LoginService service = new LoginService();
         Connection connectionToUsedDatabase = getDatabaseConnection();
 
-        service.LoginFromServer(request,response,connectionToUsedDatabase);
-
-//        String username = request.getParameter("login");
-//        String password = request.getParameter("password");
-//
-//        boolean isAuthenticated = service.authenticateUser(connectionToUsedDatabase, username, password);
-//
-//        if (isAuthenticated) {
-//            int userId = service.getUserIdByUsername(connectionToUsedDatabase, username);
-//
-//            request.getSession().setAttribute("userId", userId);
-//            String userRole = service.getUserRoleById(userId, connectionToUsedDatabase);
-//
-//            request.getSession().setAttribute("role", userRole);
-//            response.sendRedirect("index.jsp");
-//
-//        } else {
-//            response.sendRedirect("login.jsp?error=1");
-//        }
+        service.loginFromServer(request,response,connectionToUsedDatabase);
     }
 
     private Connection getDatabaseConnection() {

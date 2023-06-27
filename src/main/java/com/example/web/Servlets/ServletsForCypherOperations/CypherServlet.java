@@ -13,7 +13,7 @@ public class CypherServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         LoginService loginService = new LoginService();
         ServletContext context = getServletContext();
-        loginService.Encypher(request,response,context);
+        loginService.encipher(request,response,context);
     }
 
 }

@@ -22,19 +22,19 @@ public interface LoginInterface {
 
     void createTable(Connection conn,HttpServletRequest request, HttpServletResponse response, String jsp) throws ServletException, IOException;
 
-    void Encypher(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException;
+    void encipher(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException;
 
-    void LoginFromClient(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException;
+    void loginFromClient(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException;
 
-    void Logout(HttpServletRequest request, HttpServletResponse response) throws IOException;
+    void logout(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
-    void Registration(HttpServletRequest req, HttpServletResponse resp,Connection connection);
+    void registration(HttpServletRequest req, HttpServletResponse resp, Connection connection);
 
-    void LoginFromServer(HttpServletRequest request, HttpServletResponse response, Connection connectionToUsedDatabase) throws IOException;
+    void loginFromServer(HttpServletRequest request, HttpServletResponse response, Connection connectionToUsedDatabase) throws IOException;
 
-    void CreatingCyphers(HttpServletRequest request, HttpServletResponse response) throws IOException;
+    void creatingCyphers(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
-    void Decypher(HttpServletRequest request, HttpServletResponse response) throws IOException;
+    void decypher(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
 
 }

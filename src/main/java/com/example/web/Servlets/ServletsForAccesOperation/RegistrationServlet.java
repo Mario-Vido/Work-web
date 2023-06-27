@@ -27,23 +27,6 @@ public class RegistrationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp){
         Connection connection = (Connection) getServletContext().getAttribute("userDataBase");
         LoginService service = new LoginService();
-        service.Registration(req,resp,connection);
-//        String login = req.getParameter("login");
-//        String password = req.getParameter("password");
-//
-//        User user = new User();
-//        user.setLogin(login);
-//        user.setPassword(password);
-//
-//        try {
-//            if (loginService.authenticateUser(connection, login, password)) {
-//                resp.sendRedirect("registration.jsp?error=1");
-//            } else {
-//                loginService.registerUser(user, connection);
-//                resp.sendRedirect("login.jsp");
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
+        service.registration(req,resp,connection);
     }
 }

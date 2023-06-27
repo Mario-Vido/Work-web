@@ -7,8 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
+
 
 @WebServlet(value = "/login-from-client")
 public class LoginFromClientSerlvet extends HttpServlet {
@@ -18,22 +17,7 @@ public class LoginFromClientSerlvet extends HttpServlet {
         LoginService service = new LoginService();
         ServletContext context = getServletContext();
 
-        service.LoginFromClient(request,response,context);
-//        Connection connectionToUsedDatabase = (Connection) context.getAttribute("userDataBase");
-//
-//        String username = request.getParameter("login");
-//        String password = request.getParameter("password");
-//
-//        response.setContentType("text/plain");
-//
-//        try (PrintWriter out = response.getWriter()) {
-//            isAuthenticated = service.authenticateUser(connectionToUsedDatabase, username, password);
-//            if (isAuthenticated) {
-//                out.println("true");
-//            } else {
-//                out.println("false");
-//            }
-//        }
+        service.loginFromClient(request,response,context);
     }
 
 }
