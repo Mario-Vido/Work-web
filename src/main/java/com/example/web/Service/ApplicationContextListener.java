@@ -1,13 +1,9 @@
 package com.example.web.Service;
 
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebListener;
+import java.sql.*;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 @WebListener
 public class ApplicationContextListener implements ServletContextListener {

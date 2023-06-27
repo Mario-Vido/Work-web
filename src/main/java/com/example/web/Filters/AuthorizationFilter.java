@@ -23,6 +23,7 @@ public class AuthorizationFilter implements Filter {
         } else if(isAuthorized.equals("User")) {
             response.sendRedirect(request.getContextPath() + "/table");
         }
+//        response.sendRedirect(request.getContextPath() + "/table");
     }
 }
 

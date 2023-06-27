@@ -22,13 +22,16 @@ public class DecypherServlet extends HttpServlet {
         response.setContentType("text/plain");
 
         try (PrintWriter out = response.getWriter()) {
+
             CypherService service = new CypherService();
             Cypher matchingCypher = cypherMap.get(typeOfCypher);
+
             if (matchingCypher != null) {
                 responseFromCypher = service.performDecryption(matchingCypher, valueAfterCypher);
             } else {
                 responseFromCypher = "Invalid type of cypher";
             }
+
             out.println(responseFromCypher);
         }
     }
