@@ -17,7 +17,7 @@ import java.sql.*;
 import java.util.*;
 
 
-public class LoginService implements LoginInterface {
+public class ServerService implements LoginInterface {
 
     @Override
     public boolean authenticateUser(Connection connection, String login, String password) {
@@ -153,34 +153,31 @@ public class LoginService implements LoginInterface {
     }
 
 
-    public void encipher(HttpServletRequest request, HttpServletResponse response, ServletContext context)
-            throws IOException {
-        HttpSession session = request.getSession();
-        Map<String, Cypher> cypherMap = (Map<String, Cypher>) session.getAttribute("HashMapOfCyphers");
+    public void encipher(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException {
+        HashMap<String, Cypher> cypherMap = (HashMap<String, Cypher>) request.getSession().getAttribute("HashMapOfCyphers");
         Connection databaseConnection = (Connection) context.getAttribute("databaseConnection");
+        Connection connectionToUserDataBase = (Connection) context.getAttribute("userDataBase");
 
-        String inputFromUser = request.getParameter("param1");
-        String typeOfCypher = request.getParameter("param2");
-        String username = request.getParameter("param3");
+        String inputFromUser = request.getParameter("encodedValue");
+        String typeOfCypher = request.getParameter("typeOfCypher");
+        String username = request.getParameter("username");
 
         response.setContentType("text/plain");
-
         try (PrintWriter out = response.getWriter()) {
             CypherService service = new CypherService();
             Cypher matchingCypher = cypherMap.get(typeOfCypher);
 
-            String responseFromCypher = (matchingCypher != null)
-                    ? service.performEncryption(matchingCypher, inputFromUser)
-                    : "Invalid type of cypher";
+            String responseFromCypher;
+            if (matchingCypher != null) {
+                responseFromCypher = service.performEncryption(matchingCypher, inputFromUser);
+            } else {
+                responseFromCypher = "Invalid type of cypher";
+            }
 
             DataBase dataBase = new DataBase();
-            int idOfUser = getUserIdByUsername(databaseConnection, username);
+            int idOfUser = getUserIdByUsername(connectionToUserDataBase, username);
             dataBase.insertMassage(inputFromUser, responseFromCypher, typeOfCypher, databaseConnection, idOfUser);
-
             out.println(responseFromCypher);
-        } catch (IOException e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -277,8 +274,8 @@ public class LoginService implements LoginInterface {
     }
 
     public void decypher(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String valueAfterCypher = request.getParameter("param1");
-        String typeOfCypher = request.getParameter("param2");
+        String valueAfterCypher = request.getParameter("encodedValue");
+        String typeOfCypher = request.getParameter("typeOfCypher");
         HashMap<String, Cypher> cypherMap = (HashMap<String, Cypher>) request.getSession().getAttribute("HashMapOfCyphers");
 
         response.setContentType("text/plain");

@@ -1,6 +1,6 @@
 package com.example.web.Servlets.ServletsForAccesOperation;
 
-import com.example.web.Service.LoginService;
+import com.example.web.Service.ServerService;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +12,7 @@ import java.io.IOException;
 public class LogoutServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        LoginService service = new LoginService();
+        ServerService service = new ServerService();
         service.logout(request,response);
     }
 

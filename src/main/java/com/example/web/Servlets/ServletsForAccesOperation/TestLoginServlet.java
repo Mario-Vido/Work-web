@@ -1,6 +1,6 @@
 package com.example.web.Servlets.ServletsForAccesOperation;
 
-import com.example.web.Service.LoginService;
+import com.example.web.Service.ServerService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -12,7 +12,7 @@ public class TestLoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        LoginService service = new LoginService();
+        ServerService service = new ServerService();
         Connection connectionToUsedDatabase = getDatabaseConnection();
 
         service.loginFromServer(request,response,connectionToUsedDatabase);

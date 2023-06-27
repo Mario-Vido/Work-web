@@ -1,7 +1,7 @@
 package com.example.web.Servlets.ServletsForCypherOperations;
 
 import java.io.*;
-import com.example.web.Service.LoginService;
+import com.example.web.Service.ServerService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -11,9 +11,9 @@ public class CypherServlet extends HttpServlet {
     String responseFromCypher = null;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        LoginService loginService = new LoginService();
+        ServerService serverService = new ServerService();
         ServletContext context = getServletContext();
-        loginService.encipher(request,response,context);
+        serverService.encipher(request,response,context);
     }
 
 }

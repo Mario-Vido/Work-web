@@ -1,6 +1,6 @@
 package com.example.web.Servlets.ServletsForCypherOperations;
 
-import com.example.web.Service.LoginService;
+import com.example.web.Service.ServerService;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import java.io.IOException;
@@ -10,7 +10,7 @@ public class DecypherServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        LoginService service = new LoginService();
+        ServerService service = new ServerService();
         service.decypher(request,response);
     }
 }

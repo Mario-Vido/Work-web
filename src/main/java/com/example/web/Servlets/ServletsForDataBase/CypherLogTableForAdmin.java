@@ -2,7 +2,7 @@ package com.example.web.Servlets.ServletsForDataBase;
 
 import java.io.IOException;
 import java.sql.*;
-import com.example.web.Service.LoginService;
+import com.example.web.Service.ServerService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
@@ -18,7 +18,7 @@ public class CypherLogTableForAdmin extends HttpServlet {
         String jsp = "cypherLogForAdmin.jsp";
 
         response.setContentType("text/html");
-        LoginService service = new LoginService();
+        ServerService service = new ServerService();
         service.createTable(conn,request,response,jsp);
     }
     public void destroy () {
