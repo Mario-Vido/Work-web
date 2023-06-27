@@ -19,7 +19,7 @@ public class AuthorizationFilter implements Filter {
         String isAuthorized = service.checkUserAuthorization(request);
 
         if (isAuthorized.equals("Admin")) {
-            response.sendRedirect(request.getContextPath() + "/table");
+            response.sendRedirect(request.getContextPath() + "/cypher-log-for-admin");
         } else if(isAuthorized.equals("User")) {
             response.sendRedirect(request.getContextPath() + "/table");
         }

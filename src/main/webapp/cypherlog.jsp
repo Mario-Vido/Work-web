@@ -35,7 +35,7 @@
     <tr>
         <td colspan="6" style="text-align: center;">
             <form action="cypher-log-for-admin" method="get">
-                <input type="submit" value="Admin Button">
+                <input type="submit" value="View all ciphers">
             </form>
         </td>
     </tr>
