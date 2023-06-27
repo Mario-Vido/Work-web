@@ -20,10 +20,8 @@ public class CreatingCypherServlet extends HttpServlet {
         String sessionID = session.getId();
 
         response.addCookie(new Cookie("JSESSIONID", sessionID));
-        System.out.println(sessionID);
 
         CypherService service = new CypherService();
-
 
         List<Cypher> cypherList = service.createCyphers(2);
         Map<String, Cypher> cypherMap = service.createCypherMap(cypherList);
@@ -37,6 +35,5 @@ public class CreatingCypherServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             out.println(namesString);
         }
-        System.out.println(namesString);
     }
 }

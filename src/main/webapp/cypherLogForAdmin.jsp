@@ -16,7 +16,7 @@
     <th style="border: 1px solid black; padding: 5px;">Timestamp</th>
     <th style="border: 1px solid black; padding: 5px;">IdOfUser</th>
   </tr>
-  <% List<DatabaseValues> databaseValuesList = (List<DatabaseValues>) request.getAttribute("databaseValuesList"); %>
+  <% List<DatabaseValues> databaseValuesList = (List<DatabaseValues>) request.getAttribute("databaseValuesList");
   <% for (DatabaseValues values : databaseValuesList) { %>
   <tr>
     <td style="border: 1px solid black; padding: 5px;"><%= values.getId() %></td>
@@ -27,6 +27,13 @@
     <td style="border: 1px solid black; padding: 5px;"><%= values.getIdOfUser() %></td>
   </tr>
   <% } %>
+  <tr>
+    <td colspan="6" style="text-align: center;">
+      <form action="table" method="get">
+        <input type="submit" value="View my cifers">
+      </form>
+    </td>
+  </tr>
   <tr>
     <td colspan="6" style="text-align: center;">
       <form action="logout" method="post">
