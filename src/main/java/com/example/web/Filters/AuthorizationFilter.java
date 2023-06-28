@@ -15,7 +15,7 @@ public class AuthorizationFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        if(request.getSession().getAttribute("role")!=null){
+        if (request.getSession().getAttribute("role")!=null) {
             filterChain.doFilter(servletRequest,servletResponse);
         }else {
             response.sendRedirect("/test-login");

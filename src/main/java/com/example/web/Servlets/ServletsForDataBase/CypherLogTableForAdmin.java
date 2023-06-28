@@ -13,13 +13,13 @@ public class CypherLogTableForAdmin extends HttpServlet {
     Connection connection = null;
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        ServerService service = new ServerService();
+        String jsp = "/cypherLogForAdmin.jsp";;
         ServletContext context = getServletContext();
+        ServerService serverService = (ServerService) context.getAttribute("serverService");
         Connection conn = (Connection) context.getAttribute("databaseConnection");
-        String jsp = "/cypherLogForAdmin.jsp";
 
         response.setContentType("text/html");
-        service.createTable(conn,request,response,jsp);
+        serverService.createTable(conn,request,response,jsp);
     }
     public void destroy () {
         try {

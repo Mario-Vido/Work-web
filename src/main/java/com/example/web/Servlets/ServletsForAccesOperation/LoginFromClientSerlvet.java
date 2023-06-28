@@ -14,10 +14,9 @@ public class LoginFromClientSerlvet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ServerService service = new ServerService();
         ServletContext context = getServletContext();
-
-        service.loginFromClient(request,response,context);
+        ServerService serverService = (ServerService) context.getAttribute("serverService");
+        serverService.loginFromClient(request,response,context);
     }
 
 }

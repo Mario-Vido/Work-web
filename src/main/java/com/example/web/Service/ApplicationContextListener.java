@@ -10,6 +10,10 @@ public class ApplicationContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        CypherService cypherService= new CypherService();
+        EncryptionAndDecryptionService encryptionAndDecryptionService = new EncryptionAndDecryptionService();
+        ServerService serverService = new ServerService();
+        UserService userService = new UserService();
         ServletContext servletContext = sce.getServletContext();
         String username = "postgres";
         String password = "123";
@@ -20,6 +24,10 @@ public class ApplicationContextListener implements ServletContextListener {
             Connection connection = DriverManager.getConnection(jdbcURL, username, password);
             System.out.println("Connected to PostgreSQL server");
             servletContext.setAttribute("databaseConnection", connection);
+            servletContext.setAttribute("serverService",serverService);
+            servletContext.setAttribute("cypherService",cypherService);
+            servletContext.setAttribute("encryptionAndDecryptionService",encryptionAndDecryptionService);
+            servletContext.setAttribute("userService",userService);
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }

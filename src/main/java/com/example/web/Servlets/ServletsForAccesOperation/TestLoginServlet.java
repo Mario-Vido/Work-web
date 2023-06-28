@@ -15,9 +15,8 @@ public class TestLoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletContext context = getServletContext();
-        ServerService service = new ServerService();
+        ServerService serverService = (ServerService) context.getAttribute("serverService");
         Connection connectionToUsedDatabase = (Connection) context.getAttribute("databaseConnection");
-
-        service.loginFromServer(request,response,connectionToUsedDatabase,context);
+        serverService.loginFromServer(request,response,connectionToUsedDatabase,context);
     }
 }
