@@ -24,7 +24,7 @@
     </tr>
     <% List<DatabaseValues> databaseValuesList = (List<DatabaseValues>) request.getAttribute("databaseValuesList");
         int userId = (int) session.getAttribute("userId");
-        String role = (String) session.getAttribute("role");
+        List<String> role = (List<String>) session.getAttribute("role");
         for (DatabaseValues values : databaseValuesList) {
             if (values.getIdOfUser() == userId) { %>
     <tr>
@@ -37,7 +37,7 @@
     </tr>
     <%     }
     }
-        if (role.equals("Admin")) { %>
+        if (role.contains("Admin")) { %>
     <tr>
         <td colspan="6" style="text-align: center;">
             <form action="cypher-log-for-admin" method="get">

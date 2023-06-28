@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>Login</h1>
-<form action="test-login" method="post">
+<form action="test-login" method="get">
   <label for="login">Username:</label>
   <input type="text" id="login" name="login" required><br><br>
 
@@ -17,8 +17,6 @@
 <form action="registration.jsp">
   <input type="submit" value="Register">
 </form>
-<% if (request.getParameter("error") != null) { %>
-<p style="color: red;">Invalid username or password. Please try again.</p>
-<% } %>
-</body>
+<p style="color: red;">${errorForLogin}</p>
+
 </html>

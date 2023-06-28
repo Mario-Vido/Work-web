@@ -19,12 +19,16 @@
                 <td>Password</td>
                 <td><input type="text" name="password" /></td>
             </tr>
+            <tr>
+                <td>Repeat password</td>
+                <td><input type="text" name="repeat-password" /></td>
+            </tr>
         </table>
         <input type="submit" value="Submit" />
     </form>
-    <% if (request.getParameter("error") != null) { %>
-    <p style="color: red;">Username already used</p>
-    <% } %>
+    <p style="color: red;">${error}</p>
+    <p style="color: red;">${errorForException}</p>
+    <p style="color: red;">${errorForPassword}</p>
 </div>
 </body>
 </html>

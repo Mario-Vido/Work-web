@@ -1,6 +1,7 @@
 package com.example.web.Servlets.ServletsForAccesOperation;
 
 import com.example.web.Service.ServerService;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -25,8 +26,9 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp){
+        ServletContext context = getServletContext();
         Connection connection = (Connection) getServletContext().getAttribute("userDataBase");
         ServerService service = new ServerService();
-        service.registration(req,resp,connection);
+        service.registration(req,resp,connection,context);
     }
 }

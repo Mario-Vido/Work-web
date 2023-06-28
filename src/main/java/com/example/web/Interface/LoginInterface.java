@@ -11,16 +11,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public interface LoginInterface {
-    boolean authenticateUser(Connection connection, String login, String password);
-    int getUserIdByUsername(Connection connection, String username);
 
-    String checkUserAuthorization(HttpServletRequest request);
-
-    String getUserRoleById(Integer userId,Connection connection);
-
-    void registerUser(User user, Connection connection) throws ClassNotFoundException, SQLException;
-
-    void createTable(Connection conn,HttpServletRequest request, HttpServletResponse response, String jsp) throws ServletException, IOException;
+    void createTable(Connection conn,HttpServletRequest request, HttpServletResponse response,String jsp) throws ServletException, IOException;
 
     void encipher(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException;
 
@@ -28,9 +20,9 @@ public interface LoginInterface {
 
     void logout(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
-    void registration(HttpServletRequest req, HttpServletResponse resp, Connection connection);
+    void registration(HttpServletRequest req, HttpServletResponse resp, Connection connection,ServletContext context);
 
-    void loginFromServer(HttpServletRequest request, HttpServletResponse response, Connection connectionToUsedDatabase) throws IOException;
+    void loginFromServer(HttpServletRequest request, HttpServletResponse response, Connection connectionToUsedDatabase,ServletContext context) throws IOException, ServletException;
 
     void creatingCyphers(HttpServletRequest request, HttpServletResponse response) throws IOException;
 

@@ -15,7 +15,7 @@ public class TableServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         ServletContext context = getServletContext();
         Connection conn = (Connection) context.getAttribute("databaseConnection");
-        String jsp = "cypherlog.jsp";
+        String jsp = "/cypherlog.jsp";
 
         response.setContentType("text/html");
         ServerService service = new ServerService();

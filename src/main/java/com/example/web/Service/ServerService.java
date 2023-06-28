@@ -18,114 +18,10 @@ import java.util.*;
 
 
 public class ServerService implements LoginInterface {
+    UserService userService = new UserService();
 
     @Override
-    public boolean authenticateUser(Connection connection, String login, String password) {
-        String query = "SELECT 1 FROM users WHERE login = ? AND password = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, login);
-            statement.setString(2, password);
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                return resultSet.next();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-
-    @Override
-    public int getUserIdByUsername(Connection connection, String username) {
-        String query = "SELECT id FROM users WHERE login = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, username);
-
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                return resultSet.getInt("id");
-            } else {
-                return -1;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
-        }
-    }
-
-    @Override
-    public String checkUserAuthorization(HttpServletRequest request) {
-        Optional<String> roleOptional = Optional.ofNullable((String) request.getSession().getAttribute("role"));
-
-        return roleOptional.map(role -> {
-            if ("Admin".equals(role)) {
-                return "Admin";
-            } else if ("User".equals(role)) {
-                return "User";
-            } else {
-                return "User is not authorized";
-            }
-        }).orElse("Role not found");
-    }
-
-
-    @Override
-    public String getUserRoleById(Integer userId, Connection connection) {
-        String query = "SELECT role_id FROM user_roles WHERE user_id = ?";
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, userId);
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    int roleId = resultSet.getInt("role_id");
-                    if (roleId == 1) {
-                        return "Admin";
-                    } else if (roleId == 2) {
-                        return "User";
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return "Unknown";
-    }
-
-
-    @Override
-    public void registerUser(User user, Connection connection) throws SQLException {
-        String INSERT_USERS_SQL = "INSERT INTO users (login, password) VALUES (?, ?);";
-        String INSERT_USER_ROLE_SQL = "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?);";
-
-        try (PreparedStatement userStatement = connection.prepareStatement(INSERT_USERS_SQL, Statement.RETURN_GENERATED_KEYS)) {
-            userStatement.setString(1, user.getLogin());
-            userStatement.setString(2, user.getPassword());
-            userStatement.executeUpdate();
-
-            try (ResultSet generatedKeys = userStatement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    int userId = generatedKeys.getInt(1);
-
-                    try (PreparedStatement roleStatement = connection.prepareStatement(INSERT_USER_ROLE_SQL)) {
-                        roleStatement.setInt(1, userId);
-                        roleStatement.setInt(2, 2);
-                        roleStatement.executeUpdate();
-                    }
-                }
-            }
-        }
-    }
-
-
-
-    @Override
-    public void createTable(Connection conn, HttpServletRequest request, HttpServletResponse response, String jsp)
+    public void createTable(Connection conn, HttpServletRequest request, HttpServletResponse response,String jsp)
             throws ServletException, IOException {
         List<DatabaseValues> databaseValuesList = new ArrayList<>();
 
@@ -175,7 +71,7 @@ public class ServerService implements LoginInterface {
             }
 
             DataBase dataBase = new DataBase();
-            int idOfUser = getUserIdByUsername(connectionToUserDataBase, username);
+            int idOfUser = userService.getUserIdByUsername(connectionToUserDataBase, username);
             dataBase.insertMassage(inputFromUser, responseFromCypher, typeOfCypher, databaseConnection, idOfUser);
             out.println(responseFromCypher);
         }
@@ -191,10 +87,9 @@ public class ServerService implements LoginInterface {
         response.setContentType("text/plain");
 
         try (PrintWriter out = response.getWriter()) {
-            boolean isAuthenticated = authenticateUser(connectionToUsedDatabase, username, password);
+            boolean isAuthenticated = userService.authenticateUser(connectionToUsedDatabase, username, password);
             out.println(isAuthenticated);
         } catch (IOException e) {
-            // Handle IO exception
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
@@ -217,43 +112,57 @@ public class ServerService implements LoginInterface {
         response.sendRedirect("/");
     }
 
-    public void registration(HttpServletRequest req, HttpServletResponse resp, Connection connection){
+    public void registration(HttpServletRequest req, HttpServletResponse resp, Connection connection,ServletContext context){
         String login = req.getParameter("login");
         String password = req.getParameter("password");
+        String repeatPassword = req.getParameter("repeat-password");
 
         User user = new User();
         user.setLogin(login);
         user.setPassword(password);
 
         try {
-            if (authenticateUser(connection, login, password)) {
-                resp.sendRedirect("registration.jsp?error=1");
-            } else {
-                registerUser(user, connection);
-                resp.sendRedirect("login.jsp");
+            if(repeatPassword.equals(password)){
+                if (userService.authenticateUser(connection, login, password)) {
+                    req.setAttribute("error","User already exists");
+                    context.getRequestDispatcher("/registration.jsp").forward(req,resp);
+
+                } else {
+                    if(userService.registerUser(user, connection).equals("Success")){
+                        resp.sendRedirect("login.jsp");
+                    }else{
+                        req.setAttribute("errorForException","Registration not successful");
+                        context.getRequestDispatcher("/registration.jsp").forward(req,resp);
+                    }
+                }
+            }else {
+                req.setAttribute("errorForPassword","Passwords are not matching");
+                context.getRequestDispatcher("/registration.jsp").forward(req,resp);
             }
-        } catch (SQLException | IOException e) {
+        } catch (SQLException | IOException | ServletException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void loginFromServer(HttpServletRequest request, HttpServletResponse response, Connection connectionToUsedDatabase) throws IOException {
+    public void loginFromServer(HttpServletRequest request, HttpServletResponse response, Connection connectionToUsedDatabase,ServletContext context) throws IOException, ServletException {
         String username = request.getParameter("login");
         String password = request.getParameter("password");
 
-        boolean isAuthenticated = authenticateUser(connectionToUsedDatabase, username, password);
+        boolean isAuthenticated = userService.authenticateUser(connectionToUsedDatabase, username, password);
 
         if (isAuthenticated) {
-            int userId = getUserIdByUsername(connectionToUsedDatabase, username);
+            int userId = userService.getUserIdByUsername(connectionToUsedDatabase, username);
 
             request.getSession().setAttribute("userId", userId);
-            String userRole = getUserRoleById(userId, connectionToUsedDatabase);
+            List<String> userRole = userService.getUserRoleById(userId, connectionToUsedDatabase);
 
             request.getSession().setAttribute("role", userRole);
-            response.sendRedirect("index.jsp");
+            response.sendRedirect("/table");
+//            context.getRequestDispatcher("/table").forward(request,response);
 
         } else {
-            response.sendRedirect("login.jsp?error=1");
+            request.setAttribute("errorForLogin","Wrong username or password");
+            context.getRequestDispatcher("/login.jsp").forward(request,response);
         }
     }
 
