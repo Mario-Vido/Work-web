@@ -1,7 +1,6 @@
 package com.example.web.Service;
 
 import com.example.web.DataBase.DataBase;
-import com.example.web.Interface.LoginInterface;
 import com.example.web.Objects.Cypher;
 import com.example.web.Objects.DatabaseValues;
 import com.example.web.Objects.User;
@@ -17,10 +16,10 @@ import java.sql.*;
 import java.util.*;
 
 
-public class ServerService implements LoginInterface {
+public class ServerService {
     UserService userService = new UserService();
 
-    @Override
+
     public void createTable(Connection conn, HttpServletRequest request, HttpServletResponse response,String jsp) throws ServletException, IOException {
         List<DatabaseValues> databaseValuesList = new ArrayList<>();
 

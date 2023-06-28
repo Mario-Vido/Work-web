@@ -1,12 +1,12 @@
 package com.example.web.Service;
 
-import com.example.web.Interface.UserInterface;
+
 import com.example.web.Objects.User;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserService implements UserInterface {
+public class UserService{
 
 
     public boolean findUserInDataBase(Connection connection, String login) {
@@ -24,7 +24,7 @@ public class UserService implements UserInterface {
         return false;
     }
 
-    @Override
+
     public boolean authenticateUser(Connection connection, String login, String password) {
         String query = "SELECT 1 FROM users WHERE login = ? AND password = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -42,7 +42,7 @@ public class UserService implements UserInterface {
     }
 
 
-    @Override
+
     public int getUserIdByUsername(Connection connection, String username) {
         String query = "SELECT id FROM users WHERE login = ?";
 
@@ -62,7 +62,7 @@ public class UserService implements UserInterface {
         }
     }
 
-    @Override
+
     public List<String> getUserRoleById(Integer userId, Connection connection) {
         List<String> roles = new ArrayList<>();
 
@@ -81,7 +81,7 @@ public class UserService implements UserInterface {
         return roles;
     }
 
-    @Override
+
     public String registerUser(User user, Connection connection) throws SQLException {
         String INSERT_USERS_SQL = "INSERT INTO users (login, password) VALUES (?, ?);";
         String INSERT_USER_ROLE_SQL = "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?);";

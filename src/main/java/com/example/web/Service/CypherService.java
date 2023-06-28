@@ -1,10 +1,9 @@
 package com.example.web.Service;
 
-import com.example.web.Interface.CypherInterface;
 import com.example.web.Objects.Cypher;
 import java.util.*;
 
-public class CypherService implements CypherInterface {
+public class CypherService {
 
     EncryptionAndDecryptionService service = new EncryptionAndDecryptionService();
     public List<Cypher> createCyphers(int count) {

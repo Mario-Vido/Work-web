@@ -1,10 +1,10 @@
 package com.example.web.Service;
 
-import com.example.web.Interface.EncryptionAndDecryptionInterface;
+
 
 import java.util.HashMap;
 
-public class EncryptionAndDecryptionService implements EncryptionAndDecryptionInterface {
+public class EncryptionAndDecryptionService{
     public String performEncryptionType0(String input){
         HashMap<Character, Character> letterMap = new HashMap<>();
         for (char c = 'a'; c <= 'z'; c++) {
