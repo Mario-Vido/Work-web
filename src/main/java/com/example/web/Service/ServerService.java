@@ -51,7 +51,6 @@ public class ServerService implements LoginInterface {
     public void encipher(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException {
         HashMap<String, Cypher> cypherMap = (HashMap<String, Cypher>) request.getSession().getAttribute("HashMapOfCyphers");
         Connection databaseConnection = (Connection) context.getAttribute("databaseConnection");
-        Connection connectionToUserDataBase = (Connection) context.getAttribute("userDataBase");
 
         String inputFromUser = request.getParameter("encodedValue");
         String typeOfCypher = request.getParameter("typeOfCypher");
@@ -70,15 +69,14 @@ public class ServerService implements LoginInterface {
             }
 
             DataBase dataBase = new DataBase();
-            int idOfUser = userService.getUserIdByUsername(connectionToUserDataBase, username);
+            int idOfUser = userService.getUserIdByUsername(databaseConnection, username);
             dataBase.insertMassage(inputFromUser, responseFromCypher, typeOfCypher, databaseConnection, idOfUser);
             out.println(responseFromCypher);
         }
     }
 
-    public void loginFromClient(HttpServletRequest request, HttpServletResponse response, ServletContext context)
-            throws IOException {
-        Connection connectionToUsedDatabase = (Connection) context.getAttribute("userDataBase");
+    public void loginFromClient(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException {
+        Connection connectionToUsedDatabase = (Connection) context.getAttribute("databaseConnection");
 
         String username = request.getParameter("login");
         String password = request.getParameter("password");
@@ -157,7 +155,6 @@ public class ServerService implements LoginInterface {
 
             request.getSession().setAttribute("role", userRole);
             response.sendRedirect("/table");
-//            context.getRequestDispatcher("/table").forward(request,response);
 
         } else {
             request.setAttribute("errorForLogin","Wrong username or password");

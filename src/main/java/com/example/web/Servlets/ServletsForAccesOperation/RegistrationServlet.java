@@ -27,7 +27,7 @@ public class RegistrationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp){
         ServletContext context = getServletContext();
-        Connection connection = (Connection) getServletContext().getAttribute("userDataBase");
+        Connection connection = (Connection) getServletContext().getAttribute("databaseConnection");
         ServerService service = new ServerService();
         service.registration(req,resp,connection,context);
     }

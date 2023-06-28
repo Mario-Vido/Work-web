@@ -15,11 +15,12 @@ public class CypherLogForAdminFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         List<String> userRole = (List<String>) request.getSession().getAttribute("role");
 
-        if(userRole.contains("Admin")){
+        if(userRole==null){
+            response.sendRedirect("/test-login");
+        } else if(userRole.contains("Admin")){
             filterChain.doFilter(servletRequest, servletResponse);
-        }else{
+        } else if(userRole.contains("User")){
             response.sendRedirect("/table");
         }
-
     }
 }
