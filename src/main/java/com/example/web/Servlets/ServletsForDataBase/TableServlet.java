@@ -8,7 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "helloServlet", urlPatterns = "/table")
+@WebServlet(name = "Cypher table", urlPatterns = "/table")
 public class TableServlet extends HttpServlet {
     Connection connection = null;
 

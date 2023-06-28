@@ -18,10 +18,8 @@ public class ApplicationContextListener implements ServletContextListener {
         try {
             Class.forName("org.postgresql.Driver");
             Connection connection = DriverManager.getConnection(jdbcURL, username, password);
-            Connection connection1 = DriverManager.getConnection(jdbcURL, username, password);
             System.out.println("Connected to PostgreSQL server");
             servletContext.setAttribute("databaseConnection", connection);
-            servletContext.setAttribute("userDataBase", connection1);
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }

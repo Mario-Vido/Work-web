@@ -5,8 +5,8 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import java.io.IOException;
 
-@WebServlet(name= "DecypherServlet", urlPatterns = "/decypher")
-public class DecypherServlet extends HttpServlet {
+@WebServlet(name= "Decipher servlet", urlPatterns = "/decipher")
+public class DecipherServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {

@@ -1,18 +1,17 @@
 package com.example.web.Interface;
 
 import com.example.web.Objects.User;
-import jakarta.servlet.http.HttpServletRequest;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
 public interface UserInterface {
 
-    boolean authenticateUser(Connection connection, String login, String password);
-    int getUserIdByUsername(Connection connection, String username);
+    boolean findUserInDataBase(Connection connection, String login);
 
-    String checkUserAuthorization(HttpServletRequest request);
+    boolean authenticateUser(Connection connection, String login, String password);
+
+    int getUserIdByUsername(Connection connection, String username);
 
     List<String> getUserRoleById(Integer userId, Connection connection);
 

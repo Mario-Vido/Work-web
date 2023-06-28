@@ -13,7 +13,7 @@ public class TestLoginServlet extends HttpServlet {
 
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletContext context = getServletContext();
         ServerService service = new ServerService();
         Connection connectionToUsedDatabase = (Connection) context.getAttribute("userDataBase");

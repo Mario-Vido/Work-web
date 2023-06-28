@@ -21,8 +21,7 @@ public class ServerService implements LoginInterface {
     UserService userService = new UserService();
 
     @Override
-    public void createTable(Connection conn, HttpServletRequest request, HttpServletResponse response,String jsp)
-            throws ServletException, IOException {
+    public void createTable(Connection conn, HttpServletRequest request, HttpServletResponse response,String jsp) throws ServletException, IOException {
         List<DatabaseValues> databaseValuesList = new ArrayList<>();
 
         try (Statement statement = conn.createStatement()) {
@@ -123,7 +122,7 @@ public class ServerService implements LoginInterface {
 
         try {
             if(repeatPassword.equals(password)){
-                if (userService.authenticateUser(connection, login, password)) {
+                if (userService.findUserInDataBase(connection, login)) {
                     req.setAttribute("error","User already exists");
                     context.getRequestDispatcher("/registration.jsp").forward(req,resp);
 

@@ -2,14 +2,27 @@ package com.example.web.Service;
 
 import com.example.web.Interface.UserInterface;
 import com.example.web.Objects.User;
-import jakarta.servlet.http.HttpServletRequest;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class UserService implements UserInterface {
+
+
+    public boolean findUserInDataBase(Connection connection, String login) {
+        String query = "SELECT 1 FROM users WHERE login = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, login);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 
     @Override
     public boolean authenticateUser(Connection connection, String login, String password) {
@@ -50,22 +63,7 @@ public class UserService implements UserInterface {
     }
 
     @Override
-    public String checkUserAuthorization(HttpServletRequest request) {
-        String role = (String) request.getSession().getAttribute("role");
-            if ("Admin".equals(role)) {
-                return "Admin";
-            } else if ("User".equals(role)) {
-                return "User";
-            } else {
-                return "User is not authorized";
-            }
-        }
-
-
-
-    @Override
     public List<String> getUserRoleById(Integer userId, Connection connection) {
-//        String query = "SELECT role_id FROM user_roles WHERE user_id = ?";
         List<String> roles = new ArrayList<>();
 
         String Query = String.format("SELECT role FROM roles WHERE id IN (SELECT role_id FROM user_roles WHERE user_id = %d)", userId);
@@ -80,27 +78,8 @@ public class UserService implements UserInterface {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-//        try (PreparedStatement statement = connection.prepareStatement(query)) {
-//            statement.setInt(1, userId);
-//
-//            try (ResultSet resultSet = statement.executeQuery()) {
-//                if (resultSet.next()) {
-//                    int roleId = resultSet.getInt("role_id");
-//                    if (roleId == 1) {
-//                        return "Admin";
-//                    } else if (roleId == 2) {
-//                        return "User";
-//                    }
-//                }
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-
         return roles;
     }
-
 
     @Override
     public String registerUser(User user, Connection connection) throws SQLException {
@@ -122,18 +101,18 @@ public class UserService implements UserInterface {
                         roleStatement.setInt(1, userId);
                         roleStatement.setInt(2, 2);
                         roleStatement.executeUpdate();
-                        connection.commit(); // Commit the transaction if everything succeeds
-                        connection.setAutoCommit(true); // Restore auto-commit mode
+                        connection.commit();
+                        connection.setAutoCommit(true);
                         return "Success";
                     }
                 } else {
-                    connection.rollback(); // Rollback the transaction if user_id is not generated
-                    return "Failed"; // Exit the method to indicate a failed registration
+                    connection.rollback();
+                    return "Failed";
                 }
             }
         } catch (SQLException e) {
-            connection.rollback();// Rollback the transaction in case of any exception
-            throw e;// Rethrow the exception to indicate a failed registration
+            connection.rollback();
+            throw e;
         }
     }
 }

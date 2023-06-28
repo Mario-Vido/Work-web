@@ -1,6 +1,6 @@
 <%@ page import="com.example.web.Objects.DatabaseValues" %>
 <%@ page import="java.util.List" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
 <% if (session==null || session.getAttribute("userId")==null){
   response.sendRedirect("login.jsp");
@@ -23,7 +23,7 @@
     <th style="border: 1px solid black; padding: 5px;">IdOfUser</th>
   </tr>
   <% List<DatabaseValues> databaseValuesList = (List<DatabaseValues>) request.getAttribute("databaseValuesList");
-  <% for (DatabaseValues values : databaseValuesList) { %>
+    for (DatabaseValues values : databaseValuesList) { %>
   <tr>
     <td style="border: 1px solid black; padding: 5px;"><%= values.getId() %></td>
     <td style="border: 1px solid black; padding: 5px;"><%= values.getInput() %></td>

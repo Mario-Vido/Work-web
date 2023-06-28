@@ -1,7 +1,5 @@
 package com.example.web.Filters;
 
-import com.example.web.Service.ServerService;
-import com.example.web.Service.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,10 +16,10 @@ public class CypherLogForAdminFilter implements Filter {
         List<String> userRole = (List<String>) request.getSession().getAttribute("role");
 
         if(userRole.contains("Admin")){
+            filterChain.doFilter(servletRequest, servletResponse);
+        }else{
             response.sendRedirect("/table");
-            return;
         }
-        filterChain.doFilter(servletRequest, servletResponse);
-    }
 
+    }
 }
