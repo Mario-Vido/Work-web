@@ -9,17 +9,21 @@ import java.util.List;
 
 public class CypherLogForAdminFilter implements Filter {
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)  {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         List<String> userRole = (List<String>) request.getSession().getAttribute("role");
-
-        if(userRole==null){
-            response.sendRedirect("/test-login");
-        } else if(userRole.contains("Admin")){
-            filterChain.doFilter(servletRequest, servletResponse);
-        } else if(userRole.contains("User")){
-            response.sendRedirect("/table");
+        try {
+            if(userRole==null){
+                response.sendRedirect("/test-login");
+            } else if(userRole.contains("Admin")){
+                filterChain.doFilter(servletRequest, servletResponse);
+            } else if(userRole.contains("User")){
+                response.sendRedirect("/table");
+            }
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
         }
+
     }
 }

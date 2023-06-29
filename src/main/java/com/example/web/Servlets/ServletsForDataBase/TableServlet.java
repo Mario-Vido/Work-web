@@ -12,7 +12,7 @@ import jakarta.servlet.annotation.*;
 public class TableServlet extends HttpServlet {
     Connection connection = null;
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) {
         ServletContext context = getServletContext();
         ServerService serverService = (ServerService) context.getAttribute("serverService");
         Connection conn = (Connection) context.getAttribute("databaseConnection");

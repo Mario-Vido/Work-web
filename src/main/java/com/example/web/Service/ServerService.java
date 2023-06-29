@@ -20,7 +20,7 @@ public class ServerService {
     UserService userService = new UserService();
 
 
-    public void createTable(Connection conn, HttpServletRequest request, HttpServletResponse response,String jsp) throws ServletException, IOException {
+    public void createTable(Connection conn, HttpServletRequest request, HttpServletResponse response,String jsp)  {
         List<DatabaseValues> databaseValuesList = new ArrayList<>();
 
         try (Statement statement = conn.createStatement()) {
@@ -38,16 +38,24 @@ public class ServerService {
                 databaseValuesList.add(databaseValues);
             }
         } catch (SQLException e) {
-            throw new ServletException("Error retrieving data from the database", e);
+            try {
+                throw new ServletException("Error retrieving data from the database", e);
+            } catch (ServletException ex) {
+                throw new RuntimeException(ex);
+            }
         }
 
         request.setAttribute("databaseValuesList", databaseValuesList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(jsp);
-        dispatcher.forward(request, response);
+        try {
+            dispatcher.forward(request, response);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
-    public void encipher(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException {
+    public void encipher(HttpServletRequest request, HttpServletResponse response, ServletContext context){
         HashMap<String, Cypher> cypherMap = (HashMap<String, Cypher>) request.getSession().getAttribute("HashMapOfCyphers");
         Connection databaseConnection = (Connection) context.getAttribute("databaseConnection");
 
@@ -56,25 +64,31 @@ public class ServerService {
         String username = request.getParameter("username");
 
         response.setContentType("text/plain");
-        try (PrintWriter out = response.getWriter()) {
-            CypherService service = new CypherService();
-            Cypher matchingCypher = cypherMap.get(typeOfCypher);
+        PrintWriter out;
 
-            String responseFromCypher;
-            if (matchingCypher != null) {
-                responseFromCypher = service.performEncryption(matchingCypher, inputFromUser);
-            } else {
-                responseFromCypher = "Invalid type of cypher";
-            }
-
-            DataBase dataBase = new DataBase();
-            int idOfUser = userService.getUserIdByUsername(databaseConnection, username);
-            dataBase.insertMassage(inputFromUser, responseFromCypher, typeOfCypher, databaseConnection, idOfUser);
-            out.println(responseFromCypher);
+        try {
+            out = response.getWriter();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+
+        CypherService service = new CypherService();
+        Cypher matchingCypher = cypherMap.get(typeOfCypher);
+
+         String responseFromCypher;
+         if (matchingCypher != null) {
+             responseFromCypher = service.performEncryption(matchingCypher, inputFromUser);
+         } else {
+             responseFromCypher = "Invalid type of cypher";
+         }
+
+         DataBase dataBase = new DataBase();
+         int idOfUser = userService.getUserIdByUsername(databaseConnection, username);
+         dataBase.insertMassage(inputFromUser, responseFromCypher, typeOfCypher, databaseConnection, idOfUser);
+         out.println(responseFromCypher);
     }
 
-    public void loginFromClient(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException {
+    public void loginFromClient(HttpServletRequest request, HttpServletResponse response, ServletContext context) {
         Connection connectionToUsedDatabase = (Connection) context.getAttribute("databaseConnection");
 
         String username = request.getParameter("login");
@@ -87,12 +101,16 @@ public class ServerService {
             out.println(isAuthenticated);
         } catch (IOException e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            try {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
 
-    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void logout(HttpServletRequest request, HttpServletResponse response)  {
         HttpSession session = request.getSession();
 
         session.removeAttribute("login");
@@ -105,7 +123,11 @@ public class ServerService {
 
         session.invalidate();
 
-        response.sendRedirect("/");
+        try {
+            response.sendRedirect("/");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void registration(HttpServletRequest req, HttpServletResponse resp, Connection connection,ServletContext context){
@@ -135,12 +157,12 @@ public class ServerService {
                 req.setAttribute("errorForPassword","Passwords are not matching");
                 context.getRequestDispatcher("/registration.jsp").forward(req,resp);
             }
-        } catch (SQLException | IOException | ServletException e) {
+        } catch (IOException | ServletException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void loginFromServer(HttpServletRequest request, HttpServletResponse response, Connection connectionToUsedDatabase,ServletContext context) throws IOException, ServletException {
+    public void loginFromServer(HttpServletRequest request, HttpServletResponse response, Connection connectionToUsedDatabase,ServletContext context) {
         String username = request.getParameter("login");
         String password = request.getParameter("password");
 
@@ -153,15 +175,23 @@ public class ServerService {
             List<String> userRole = userService.getUserRoleById(userId, connectionToUsedDatabase);
 
             request.getSession().setAttribute("role", userRole);
-            response.sendRedirect("/table");
+            try {
+                response.sendRedirect("/table");
+            } catch (IOException e) {
+                response.setStatus(400);
+            }
 
         } else {
             request.setAttribute("errorForLogin","Wrong username or password");
-            context.getRequestDispatcher("/login.jsp").forward(request,response);
+            try {
+                context.getRequestDispatcher("/login.jsp").forward(request,response);
+            } catch (ServletException | IOException e) {
+                response.setStatus(400);
+            }
         }
     }
 
-    public void creatingCyphers(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void creatingCyphers(HttpServletRequest request, HttpServletResponse response) {
         CypherService service = new CypherService();
         List<Cypher> cypherList = service.createCyphers(2);
         Map<String, Cypher> cypherMap = service.createCypherMap(cypherList);
@@ -174,28 +204,36 @@ public class ServerService {
 
         try (PrintWriter out = response.getWriter()) {
             out.println(namesString);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public void decypher(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void decypher(HttpServletRequest request, HttpServletResponse response) {
         String valueAfterCypher = request.getParameter("encodedValue");
         String typeOfCypher = request.getParameter("typeOfCypher");
         HashMap<String, Cypher> cypherMap = (HashMap<String, Cypher>) request.getSession().getAttribute("HashMapOfCyphers");
 
         response.setContentType("text/plain");
 
-        try (PrintWriter out = response.getWriter()) {
-            CypherService service = new CypherService();
-            Cypher matchingCypher = cypherMap.get(typeOfCypher);
+        PrintWriter out;
 
-            String responseFromCypher;
-            if (matchingCypher != null) {
-                responseFromCypher = service.performDecryption(matchingCypher, valueAfterCypher);
-            } else {
-                responseFromCypher = "Invalid type of cypher";
-            }
-
-            out.println(responseFromCypher);
+        try {
+            out = response.getWriter();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+        CypherService service = new CypherService();
+        Cypher matchingCypher = cypherMap.get(typeOfCypher);
+
+        String responseFromCypher;
+        if (matchingCypher != null) {
+            responseFromCypher = service.performDecryption(matchingCypher, valueAfterCypher);
+        } else {
+            responseFromCypher = "Invalid type of cypher";
+        }
+
+        out.println(responseFromCypher);
+
     }
 }

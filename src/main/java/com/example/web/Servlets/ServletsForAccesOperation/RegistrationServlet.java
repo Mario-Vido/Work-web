@@ -20,8 +20,12 @@ public class RegistrationServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.sendRedirect("registration.jsp");
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)  {
+        try {
+            resp.sendRedirect("registration.jsp");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

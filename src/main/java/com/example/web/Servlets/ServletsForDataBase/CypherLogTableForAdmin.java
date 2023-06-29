@@ -12,7 +12,7 @@ import jakarta.servlet.annotation.*;
 public class CypherLogTableForAdmin extends HttpServlet {
     Connection connection = null;
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) {
         String jsp = "/cypherLogForAdmin.jsp";;
         ServletContext context = getServletContext();
         ServerService serverService = (ServerService) context.getAttribute("serverService");

@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class LogoutServlet extends HttpServlet {
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) {
         ServletContext context = getServletContext();
         ServerService serverService = (ServerService) context.getAttribute("serverService");
         serverService.logout(request,response);

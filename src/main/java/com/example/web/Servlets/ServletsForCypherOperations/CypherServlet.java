@@ -9,7 +9,7 @@ import jakarta.servlet.annotation.*;
 @WebServlet(name= "CypherServlet", urlPatterns = "/cypher")
 public class CypherServlet extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response){
         ServletContext context = getServletContext();
         ServerService serverService = (ServerService) context.getAttribute("serverService");
         serverService.encipher(request,response,context);

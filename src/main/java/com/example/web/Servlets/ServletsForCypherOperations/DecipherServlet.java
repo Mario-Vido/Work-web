@@ -10,7 +10,7 @@ import java.io.IOException;
 public class DecipherServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response){
         ServletContext context = getServletContext();
         ServerService serverService = (ServerService) context.getAttribute("serverService");
         serverService.decypher(request,response);
